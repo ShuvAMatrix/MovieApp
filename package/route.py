@@ -132,6 +132,16 @@ def bin():
         return render_template("view.html", moviesLists=moviesLists, user=current_user)
 
 
+@app.route("/delete/<id>", methods={"GET", "POST"})
+@login_required
+def delete(id):
+    if request.method == "GET":
+        movie = Movie.query.filter_by(id=id).first()
+        db.session.delete(movie)
+        db.session.commit()
+        flash(f"Movie has been archived!", "success")
+        return redirect("/bin")
+
 
 @app.route("/restore/<id>", methods={"GET", "POST"})
 @login_required
@@ -159,7 +169,7 @@ def details(id):
         from package.cutomClasses import tmdb_info, omdb_info
 
         #Without threading
-        # tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
+        tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
         related_movies = fetchSimilarMovies(movie)
         
         #With Threading

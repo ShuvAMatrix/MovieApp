@@ -123,6 +123,32 @@
                                                 
                                                 "
                                                 >Restore</button>
+                                            <button name="save" id="btn-ok" value=""
+                                            class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: 'You won\'t be able to revert this!',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Yes, delete it!'
+                                                    }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        Swal.fire({
+                                                        imageUrl: '../../../static/img/spinner.gif',
+                                                        title: 'Deleting Video...',
+                                                        allowOutsideClick: true,
+                                                        allowEscapeKey: false,
+                                                        showCancelButton: false,
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                    location.href='/delete/{{ movie.id }}'
+                                                    }
+                                                    })
+                                                
+                                                ">Delete</button>
                                             {% else %}
                                                 <button name="save" id="btn-ok" value=""
                                                 class="btn btn-outline-primary btn-rounded btn-md ml-4" 

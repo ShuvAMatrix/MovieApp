@@ -1,7 +1,4 @@
 from datetime import datetime
-from email import header
-from urllib import response
-from bs4 import BeautifulSoup
 from flask import request
 import requests
 from package import imdb_image_prefix, imdb_title_prefix, TMDB_API_KEY, OMDB_API_KEY
@@ -137,7 +134,7 @@ def fetchSimilarMovies(movie):
                 related_movies.append(i)
     else:
         for i in movies:
-            if movie.id != i.id:
+            if movie.id != i.id and "Animation" not in i.genre.split(", "):
                 if set(genre) & set(i.genre.split(", ")):
                     related_movies.append(i)
     return related_movies
