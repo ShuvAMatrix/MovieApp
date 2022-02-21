@@ -1,7 +1,7 @@
 import click
 from flask.cli import with_appcontext
 from package import db
-from package.models import User, Movie
+from package.models import User
 
 
 @click.command(name="recreate_table")
@@ -35,7 +35,18 @@ def createUser():
     user = User(email=email, password=password, admin=False)
     db.session.add(user)
     db.session.commit()
-    print("User added successfully.")
+    print("User created successfully.")
 
+
+@click.command(name="initialize")
+@with_appcontext
+def initialize():
+    from package  import db
+    db.drop_all()
+    db.create_all()
+    from package.models import User
+    user = User(email="shuvamgg@gmail.com", password="shuvam1234", admin=True)
+    db.session.add(user)
+    db.session.commit()
 
 from package import app

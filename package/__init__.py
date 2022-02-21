@@ -24,8 +24,9 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from package import route
-from package.commands import createAdmin, dropnCreateDb, createUser
+from package.commands import createAdmin, dropnCreateDb, createUser, initialize
 
 app.cli.add_command(createAdmin)
 app.cli.add_command(dropnCreateDb)
 app.cli.add_command(createUser)
+app.cli.add_command(initialize)
