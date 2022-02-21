@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% block body %}
+    {% if moviesLists|length > 0 %}
+        {% for moviesList in moviesLists %}
+            <div class="row mt-4 mb-3">
+                {% for movie in moviesList %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <!--Modal: Name-->
+                        <div class="modal fade" id="modal_{{movie.id}}" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+
+                                <!--Content-->
+                                <div class="modal-content">
+
+                                    <!--Body-->
+                                    <div class="modal-body mb-0 p-0 bg-dark">
+
+                                        <!-- <div class="embed-responsive embed-responsive-16by9 z-depth-1-half" 
+                                            style="background-color: rgb(29, 29, 29);">-->
+                                            <!-- <iframe class="embed-responsive-item" src="{{directLink}}" allowfullscreen></iframe> -->
+                                            <!-- <video
+                                                id="my-video"
+                                                controls
+                                                aria-disabled="true"
+                                                preload="auto"
+                                                width="640"
+                                                height="264"
+                                                poster="{{movie.posterLink}}"
+                                                data-setup="{}"
+                                            >
+                                                <source src="" alt="Currently not supported!" type="video/mp4" />
+                                                <source src="MY_VIDEO.webm" type="video/webm" />
+                                                Unfortunately your browser is too old.
+                                            </video> -->
+                                            <div class="bg-image text-center">
+                                                <img
+                                                  src="{{movie.posterLink}}"
+                                                  class="img-fluid"
+                                                  alt="Sample"
+                                                  style="max-height: 70vh;"
+                                                />
+                                                <div class="mask" style="background-color: rgba(0, 0, 0, 0.7);">
+                                                  <div class="d-flex justify-content-center align-items-center h-100">
+                                                    <div style="margin-top: 40%;" class="text-white mb-0">
+                                                        <h5>Unfortunately, Live playback is </h5>
+                                                        <h5>Currently not supported.</h5>
+                                                        <h5 class="text-success">Please consider using other options</h5>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        <!-- </div> -->
+
+                                    </div>
+                                    <div class="modal-footer justify-content-center" style="background-color: rgb(29, 29, 29);">
+                                        <button name="save" id="copyurl" value=""
+                                            class="btn btn-outline-primary btn-rounded btn-md ml-4" 
+                                            onclick="
+                                            var copyText ='{{ movie.directLink }}'
+                                            console.log(copyText)
+                                            var dummy = document.createElement('textarea');
+                                            document.body.appendChild(dummy);
+                                            dummy.value = copyText;
+                                            dummy.select();
+                                            dummy.setSelectionRange(0, 99999);
+                                            navigator.clipboard.writeText(dummy.value);
+                                            document.body.removeChild(dummy);
+                                            Swal.fire({
+                                                title: 'Copied to Clipboard!',
+                                                icon: 'success',
+                                                timerProgressBar: true,
+                                                confirmButtonText: 'Okay',
+                                                timer: 2000
+                                            })"
+                                        >Copy</button>
+                                        <button name="save" id="btn-ok" value=""
+                                            class="btn btn-outline-primary btn-rounded btn-md ml-4" 
+                                            onclick="
+                                            Swal.fire({
+                                                imageUrl: '../../../static/img/spinner.gif',
+                                                title: 'Downloading Video...',
+                                                allowOutsideClick: true,
+                                                allowEscapeKey: false,
+                                                showCancelButton: false,
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                            location.href='{{ movie.directLink }}'
+                                            "
+                                        >Download</button>
+                                        {% if user.admin %}
+                                            <button name="save" id="btn-ok" value=""
+                                                class="btn btn-outline-primary btn-rounded btn-md ml-4" 
+                                                onclick=""
+                                            >Edit</button>
+                                            {% if movie.is_archived %}
+                                                <button name="save" id="btn-ok" value=""
+                                                class="btn btn-outline-primary btn-rounded btn-md ml-4" 
+                                                onclick="
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: 'You won\'t be able to revert this!',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Yes, restore it!'
+                                                    }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        Swal.fire({
+                                                        imageUrl: '../../../static/img/spinner.gif',
+                                                        title: 'Restoring Video...',
+                                                        allowOutsideClick: true,
+                                                        allowEscapeKey: false,
+                                                        showCancelButton: false,
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                    location.href='/restore/{{ movie.id }}'
+                                                    }
+                                                    })
+                                                
+                                                "
+                                                >Restore</button>
+                                            {% else %}
+                                                <button name="save" id="btn-ok" value=""
+                                                class="btn btn-outline-primary btn-rounded btn-md ml-4" 
+                                                onclick="
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: 'You won\'t be able to revert this!',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Yes, archive it!'
+                                                    }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        Swal.fire({
+                                                        imageUrl: '../../../static/img/spinner.gif',
+                                                        title: 'Archiving Video...',
+                                                        allowOutsideClick: true,
+                                                        allowEscapeKey: false,
+                                                        showCancelButton: false,
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                    location.href='/archive/{{ movie.id }}'
+                                                    }
+                                                    })
+                                                
+                                                "
+                                                >Archive</button>
+                                            {% endif %}
+                                            
+                                        {% endif %}
+                                        <button type="button" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+
+                                </div>
+                                <!--/.Content-->
+
+                            </div>
+                        </div>
+                        <!--Modal: Name  -->
+                        <div class="bg-image hover-overlay">
+                            <img class="img-fluid z-depth-2 thumb_movie rounded" src="{{movie.posterLink}}" alt="{{movie.name}}">
+                        
+                            <a 
+                                class="mask text-decoration-none"
+                                style="
+                                /* background: linear-gradient(
+                                    45deg,
+                                    rgba(29, 236, 197, 0.5),
+                                    rgba(91, 14, 214, 0.5) 100% 
+                                );*/
+                                background: rgba(0, 0, 0, 0.7);;
+                                
+                                "
+                            >
+                                <div style="margin-top: 20%; margin-bottom: 20%;" class="text-center justify-content-center">
+                                    <div  class="mt-5 text-success">
+                                        <i class="fa fa-star fa-3x"></i>
+                                    </div>
+                                    <div style="margin-top: 20%; margin-bottom: 20%;" class="text-white h4 mt-3 mb-5">{{movie.imdb_rating}}/10</div>
+                                    <div>
+                                        {% for genre in movie.genre.split(", ") %}
+                                            <div class="text-white h5">
+                                                {{genre}}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div style="margin-top: 20%; margin-bottom: 20%;" class="my-5">
+                                        <button class="btn btn-success btn-rounded waves-effect mr-1" onclick="location.href='/details/{{movie.id}}'">
+                                            Details
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-rounded waves-effect ml-1" data-toggle="modal" 
+                                            data-target="#modal_{{movie.id}}">
+                                            Watch
+                                        </button>
+                                        
+                                    </div>
+                                </div>
+                            </a>  
+                        </div>
+                        <div class="mx-1 text-white"><b>{{movie.name}}</b></div>
+                        <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{{movie.release_year}}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}              
+    {% else %}
+        Noting here!!
+    {% endif %}
+{% endblock body %}

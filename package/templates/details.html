@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container-fluid text-center justify-content-center">
+    <div class="row g-5">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+            <div class="mt-3">
+                <img class="img-fluid z-depth-2 thumb_movie rounded" style="max-height: 70vh;"
+                    src="{{movie.posterLink}}" alt="{{movie.name}}">
+                <div class="text-center align-items-center my-4" style="background-color: rgb(29, 29, 29);">
+                    <button name="save" id="copyurl" value="" class="btn btn-outline-success btn-rounded btn-md mr-2"
+                        onclick="
+                        var copyText ='{{ movie.directLink }}'
+                        console.log(copyText)
+                        var dummy = document.createElement('textarea');
+                        document.body.appendChild(dummy);
+                        dummy.value = copyText;
+                        dummy.select();
+                        dummy.setSelectionRange(0, 99999);
+                        navigator.clipboard.writeText(dummy.value);
+                        document.body.removeChild(dummy);
+                        Swal.fire({
+                            title: 'Copied to Clipboard!',
+                            icon: 'success',
+                            timerProgressBar: true,
+                            confirmButtonText: 'Okay',
+                            timer: 2000
+                        })">Copy</button>
+                    <button name="save" id="btn-ok" value="" class="btn btn-success btn-rounded btn-md mx-2" onclick="
+                            Swal.fire({
+                                imageUrl: '../../../static/img/spinner.gif',
+                                title: 'Downloading Video...',
+                                allowOutsideClick: true,
+                                allowEscapeKey: false,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            location.href='{{ movie.directLink }}'
+                            ">
+                        <i class="d-none fa fa-download mr-2"></i>
+                        Download</button>
+                    <button type="button" class="btn btn-outline-success btn-md  btn-rounded waves-effect ml-2"
+                        data-toggle="modal" data-target="#modal_{{movie.id}}">
+                        Watch
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <!--Modal: Name-->
+                <div class="modal fade" id="modal_{{movie.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+
+                        <!--Content-->
+                        <div class="modal-content">
+
+                            <!--Body-->
+                            <div class="modal-body mb-0 p-0 bg-dark">
+                                <div class="bg-image text-center">
+                                    <img src="{{movie.posterLink}}" class="img-fluid" alt="Sample"
+                                        style="max-height: 70vh;" />
+                                    <div class="mask" style="background-color: rgba(0, 0, 0, 0.7);">
+                                        <div class="d-flex justify-content-center align-items-center h-100">
+                                            <div style="margin-top: 40%;" class="text-white mb-0">
+                                                <h5>Unfortunately, Live playback is </h5>
+                                                <h5>Currently not supported.</h5>
+                                                <h5 class="text-success">Please consider using other options</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+
+                            </div>
+                            <div class="modal-footer justify-content-center" style="background-color: rgb(29, 29, 29);">
+                                <button name="save" id="copyurl" value=""
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
+                                    var copyText ='{{ movie.directLink }}'
+                                    console.log(copyText)
+                                    var dummy = document.createElement('textarea');
+                                    document.body.appendChild(dummy);
+                                    dummy.value = copyText;
+                                    dummy.select();
+                                    dummy.setSelectionRange(0, 99999);
+                                    navigator.clipboard.writeText(dummy.value);
+                                    document.body.removeChild(dummy);
+                                    Swal.fire({
+                                        title: 'Copied to Clipboard!',
+                                        icon: 'success',
+                                        timerProgressBar: true,
+                                        confirmButtonText: 'Okay',
+                                        timer: 2000
+                                    })">Copy</button>
+                                <button name="save" id="btn-ok" value=""
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
+                                    Swal.fire({
+                                        imageUrl: '../../../static/img/spinner.gif',
+                                        title: 'Downloading Video...',
+                                        allowOutsideClick: true,
+                                        allowEscapeKey: false,
+                                        showCancelButton: false,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    location.href='{{ movie.directLink }}'
+                                    ">Download</button>
+                                {% if user.admin %}
+                                <button name="save" id="btn-ok" value=""
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="">Edit</button>
+                                {% if movie.is_archived %}
+                                <button name="save" id="btn-ok" value=""
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: 'You won\'t be able to revert this!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Yes, restore it!'
+                                            }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                Swal.fire({
+                                                imageUrl: '../../../static/img/spinner.gif',
+                                                title: 'Restoring Video...',
+                                                allowOutsideClick: true,
+                                                allowEscapeKey: false,
+                                                showCancelButton: false,
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                            location.href='/restore/{{ movie.id }}'
+                                            }
+                                            })
+                                        
+                                        ">Restore</button>
+                                {% else %}
+                                <button name="save" id="btn-ok" value=""
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: 'You won\'t be able to revert this!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Yes, archive it!'
+                                            }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                Swal.fire({
+                                                imageUrl: '../../../static/img/spinner.gif',
+                                                title: 'Archiving Video...',
+                                                allowOutsideClick: true,
+                                                allowEscapeKey: false,
+                                                showCancelButton: false,
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                            location.href='/archive/{{ movie.id }}'
+                                            }
+                                            })
+                                        
+                                        ">Archive</button>
+                                {% endif %}
+
+                                {% endif %}
+                                <button type="button" class="btn btn-outline-primary btn-rounded btn-md ml-4"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                        <!--/.Content-->
+
+                    </div>
+                </div>
+                <!--Modal: Name  -->
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-6 col-xl-5 col-lg-5">
+            <div class="row gy-4 mx-2 mt-2">
+                <div class="text-white text-left ">
+                    <div class="h1">{{movie.name}}</div>
+                    <div class="h6 mt-4">
+                        <span class="mr-2">{{movie.release_year}}</span>
+                        <span>*</span>
+                        <span class="ml-2">{{movie.runtime}}</span>
+                        </div>
+                    <div class="h6">Original Name : {{movie.original_name}}</div>
+                    <div class="h6">
+                        {% if movie.genre.endswith(", ") %}
+                            {{movie.genre.replace(",","")}}
+                        {% else %}
+                            {{movie.genre.replace(", ","/ ")}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5 gy-5 text-white">
+                <div class="row my-2 ">
+                    <div class="col-3 mx-4 text-left">
+                        <div class=""><img style="max-width:48px;" src="../../../static/img/imdb.png"></div>
+                    </div>
+                    <div class="col-3 mx-4 text-left">
+                        <div class="mx-3">{{movie.imdb_rating}}/10</div>
+                    </div>
+                </div>
+                {% if omdb_info["Ratings"] %}
+                    <div class="row my-2">
+                        <div class="col-3 mx-4 text-left">
+                            <div class=""><img style="max-width:32px;" src="../../../static/img/rotten_tomatoes.png"></div>
+                        </div>
+                        <div class="col-3 mx-4 text-left">
+                            <div class="mx-3">{{omdb_info["Ratings"][1]["Value"]}}</div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-3 mx-4 text-left">
+                            <div class=""><img style="max-width:32px;" src="../../../static/img/metacritic32.png"></div>
+                        </div>
+                        <div class="col-3 mx-4 text-left justify-content-center">
+                            <div class="mx-3">{{omdb_info["Ratings"][2]["Value"]}}</div>
+                        </div>
+                    </div>
+                {% else %}
+
+                    <div class="row my-2">
+                        <div class="col-3 mx-4 text-left">
+                            <div class=""><img style="max-width:32px;" src="../../../static/img/rotten_tomatoes.png"></div>
+                        </div>
+                        <div class="col-3 mx-4 text-left">
+                            <div class="mx-3">NA</div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-3 mx-4 text-left">
+                            <div class=""><img style="max-width:32px;" src="../../../static/img/metacritic32.png"></div>
+                        </div>
+                        <div class="col-3 mx-4 text-left align-items-center">
+                            <div class="mx-3 my-1">NA</div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+            </div>
+            <div class="text-left row mt-5 mx-2">
+                <div class="h3 text-white">Plot</div>
+                {% if omdb_info["Plot"] %}
+                    <div class="h6 text-white">{{omdb_info["Plot"]}}</div>
+                {% else %}
+                <div class="h6 text-white">{{tmdb_info["overview"]}}</div>
+                {% endif %}
+                
+            </div>
+        </div>
+        <div class="d-none d-lg-block d-xl-block col-2">
+            <div class="h5 my-4 text-white ">Related Movies</div>
+            <div class="row row-cols-1 gy-5">
+                {% for rmovie in related_movies %}
+                    <div class=" justify-content-center">
+                        <a href="/details/{{rmovie.id}}">
+                            <img style="max-width: 130px;" src="{{rmovie.posterLink}}">
+                        </a>
+                        <div class="text-white mx-2 my-2" style="font-size:13px;">{{rmovie.name}}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}

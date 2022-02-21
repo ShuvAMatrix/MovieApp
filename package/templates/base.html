@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Movies</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="{{ url_for('static',filename='img/favicon.ico') }}" type="image/x-icon">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+    <!-- Material Design Bootstrap -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/mdb.min.css') }}">
+
+    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
+    <!-- Your custom styles (optional) -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+
+    <style>
+        .dropdown:hover .dropdown-menu{
+            display: block;
+        }
+        .columns{
+            float: left;
+            position: relative;
+            margin-right: 20px;
+        }
+        .columns.one-col {
+            column-count: 2;
+            overflow-y: auto;
+        }
+        .columns.two-col {
+            column-count: 2;
+            height: auto;
+            overflow-y: auto;
+        }/*
+        .columns.three-col {
+            column-count: 3;
+            overflow: auto;
+            column-fill: auto;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            column-gap: 20px; 
+        }
+        .columns.four-col {
+            column-count: 4;
+            overflow: hidden;
+            
+        } */
+        /* .dropdown-menu{
+            width: 20vw;
+            overflow-y: auto;
+        }
+        .columns.two-col {
+            height: auto;
+            overflow-y: auto;
+            
+        }
+        .dropdown-menu li {
+            line-height: 1.5em;
+            float: left;
+            display: inline;           
+        }
+        #dropdown li {
+            width: 50%;
+        } */
+        #imdbURL.loading {
+            background: url('../../../static/img/loading_sm.gif') no-repeat 99% center;
+        }
+        .thumb_movie:hover{
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body style="background-color: rgb(29, 29, 29);">
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <!-- Navbar brand -->
+            <a class="navbar-brand mx-5" href="/">Movies</a>
+
+            <!-- Collapse button -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#MainNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse" id="MainNav">
+
+                <!-- Links -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {{w}} mx-3">
+                        <a class="nav-link" href="/all">All
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                   <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                          Genres
+                        </a>
+                        <ul class="dropdown-menu columns bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
+                            <li>
+                                <a class="dropdown-item {{action}}" href="/category/Action">Action</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Adventure">Adventure</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Animation">Animation</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Comedy">Comedy</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Crime">Crime</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Documentary">Documentary</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Drama">Drama</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Family">Family</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Fantasy">Fantasy</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/History">History</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Horror">Horror</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Music">Music</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Mystery">Mystery</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Romance">Romance</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Science Fiction">Science Fiction</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/TV Movie">TV Movie</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/Thriller">Thriller</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/category/War">War</a>
+                            </li>
+                            <!-- <li>
+                                <a class="dropdown-item" href="/category/Western">Western</a>
+                            </li> -->
+                        </ul>
+                      </li>
+                    <li class="nav-item {{z}} mx-2">
+                        <a class="nav-link" href="#">New
+                            <span class="sr-only">(current)</span>
+                        </a>
+
+                    </li>
+                    <li class="nav-item {{v}} mx-2">
+                        <a class="nav-link" href="#">Popular
+                            <span class="sr-only">(current)</span>
+                        </a>
+
+                    </li>
+                    {% if user.admin %}
+                    <li class="nav-item {{v}} mx-2">
+                        <a class="nav-link" href="#">Settings
+                            <span class="sr-only">(current)</span>
+                        </a>
+
+                    </li>
+                    <li class="nav-item {{v}} mx-2">
+                        <a class="nav-link" href="/bin">Archived
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="nav-item {{v}} mx-2">
+                        <a class="nav-link" href="#">About us
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Links -->
+                {% if user.admin %}
+                <div class="md-form mx-2">
+                    <a type="button" class="btn btn-sm btn-outline-success btn-rounded waves-effect"
+                        data-target="#modalConfirmUpdate" data-toggle="modal">Add Movie</a>
+                </div>
+                {% endif %}
+                <!-- Button trigger modal-->
+
+                <!--Modal: Modal Add Movie-->
+                <div class="modal fade" id="modalConfirmUpdate" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <!--Content-->
+                        <div class="modal-content bg-dark" style="color: rgb(255, 255, 255);">
+                            <!--Header-->
+                            <div class="modal-header d-flex justify-content-center mt-3">
+                                <p class="heading h4">Enter The details below</p>
+                            </div>
+
+                            <!--Body-->
+                            <div class="modal-body">
+                                <form action="/add" method="POST" id="addMovieForm" class="needs-validation" novalidate>
+                                    <!-- <div class="mt-4 mb-4 form-outline">
+                                        <input type="text" id="moviename" name="moviename" value="" class="form-control"  style="color: rgb(255, 255, 255);"/>
+                                        <label for="moviename" class="form-label" style="color: rgb(166, 181, 194);">Movie Name</label>
+                                        
+                                    </div> -->
+                                    <div class="row mb-4 mt-4">
+                                        <div class="col">
+                                          <div id="movienamediv" class="form-outline">
+                                            <input type="text" id="moviename" name="moviename" class="form-control" style="color: rgb(255, 255, 255);" required>
+                                            <label class="form-label" for="moviename" style="margin-left: 0px; color: rgb(167, 173, 179);">Movie Name</label>
+                                            <div class="form-helper fst-italic text-danger invisible" style="font-size:11px" id="addedmovienamediv">*Required</div>
+                                          <div class="form-notch"><div class="form-notch-leading" style="width: 9px; "></div><div class="form-notch-middle" style="width: 68.8px;"></div><div class="form-notch-trailing"></div></div></div>
+                                          
+                                        </div>
+                                        <div class="col">
+                                          <div id="movieyeardiv" class="form-outline">
+                                            <input type="text" name="releaseyear" id="releaseyear" style="color: rgb(255, 255, 255);" class="form-control" required>
+                                            <label class="form-label" for="releaseyear" style="margin-left: 0px; color: rgb(167, 173, 179);">Release Year</label>
+                                            <div class="form-helper fst-italic text-danger invisible" style="font-size:11px" id="addedmovieyeardiv">*Required</div>
+                                          <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 68px;"></div><div class="form-notch-trailing"></div></div></div>
+                                        </div>
+                                    </div>
+                                    <div id="movieurldiv" class="mb-4 mt-4 form-outline">
+                                        <input type="url" id="movieURL" name="movieURL" class="form-control" style="color: rgb(255, 255, 255); " required />
+                                        <label class="form-label" for="movieURL" style="color: rgb(167, 173, 179);">URL</label>
+                                        <div class="form-helper fst-italic text-danger invisible" style="font-size:11px" id="addedmovieurldiv">*Required</div>
+                                      </div>
+                                    <div id="movieimdburldiv" class="mb-4 mt-4 form-outline">
+                                        <input type="url" id="imdbURL" name="imdbURL" value="" class="form-control" style="color: rgb(255, 255, 255);" required/>
+                                        <label class="form-label" for="imdbURL" style="color: rgb(167, 173, 179);" >IMDB URL</label>
+                                        <div class="form-helper fst-italic text-danger invisible" style="font-size:11px" id="addedmovieimdburldiv">*Required</div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!--Footer-->
+                            <div class="modal-footer flex-center">
+                                <a type="submit" href="#" class="btn btn-sm btn-outline-success" onclick="submitModalForm()">Add</a>
+                                <a type="button" class="btn btn-sm btn-outline-primary waves-effect" data-dismiss="modal" onclick="$('#addMovieForm')[0].reset(); $('#addedmovienamediv').remove();$('#addedmovieyeardiv').remove();$('#addedmovieurldiv').remove();$('#addedmovieimdburldiv').remove(); $('#imdbURL').removeClass('loading')">Cancel</a>
+                            </div>
+                        </div>
+                        <!--/.Content-->
+                    </div>
+                </div>
+                <!--Modal: Modal Add Movie-->
+                <form class="d-flex ml-2 input-group w-auto">
+                    <input
+                      type="search"
+                      class="form-control rounded loading"
+                      placeholder="Search"
+                      aria-label="Search"
+                      ari0a-describedby="search-addon"
+                    />
+                    <span class="bg-dark input-group-text text-white border-0" id="search-addon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                  </form>
+
+            </div>
+        <!-- Collapsible content -->
+    </div>
+
+    </nav>
+    <!--/.Navbar-->
+    <div class="container" style="padding-top: 1%;">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="text-center alert alert-{{ category }}">
+                {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block body %}
+            
+        {% endblock body %}
+            
+    </div>
+    {% block extrajs %}
+            
+    {% endblock extrajs %}
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/popper.min.js') }}j"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{{ url_for('static',filename='js/mdb.min.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/require.js') }}"></script>
+
+    <!-- Your custom scripts (optional) -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+        var columnCount = $(".columns li").length;
+        console.log(columnCount)
+        if (columnCount <= 10) {
+            $(".columns").addClass("one-col");
+        } else{
+            $(".columns").addClass("two-col");
+        }
+    })
+
+        document.getElementById("releaseyear")
+            .addEventListener('change', (e) => {
+                $('#imdbURL').addClass("loading")
+                document.getElementById("imdbURL").value = "";
+                var mname = document.getElementById("moviename").value;
+                var flag = 0
+                var val = e.currentTarget.value;
+                var url = "/googlesearch/"+ mname + " " + val
+                try{
+                    $.get(url, function(response) {
+                        if(response == ""){
+                            document.getElementById("imdbURL").value = "Error! Please fill URL manually"
+                        }
+                        for (let i = 0; i < response["length"]; i++) {
+                            if (response["results"][i].startsWith("https://www.imdb.com/title/")){
+                                document.getElementById("imdbURL").value = response["results"][i];
+                                flag = 1
+                                break
+                            }
+                        }
+                        if(flag == 0){
+                            document.getElementById("imdbURL").value = "Error! Please fill URL manually"
+                        }
+                        document.getElementById("imdbURL").focus();
+                        $('#imdbURL').removeClass("loading")
+                        $('#moviename').addClass("loading")
+                    });
+                }
+                catch{
+                    document.getElementById("imdbURL").value = "Error! Please fill URL manually"
+                }
+            });
+        
+        
+        function submitModalForm(){
+            var moviename = document.getElementById("moviename").value
+            var releaseyear = document.getElementById("releaseyear").value
+            var url = document.getElementById("movieURL").value
+            var imdbURL = document.getElementById("imdbURL").value
+            if(moviename != "" && releaseyear != "" && url != "" && imdbURL != ""){
+                document.getElementById("addMovieForm").submit()
+            }
+            else{
+                if(moviename == ""){
+                    $("#addedmovienamediv").removeClass('invisible');
+                }
+                if(releaseyear == ""){
+                    $("#addedmovieyeardiv").removeClass('invisible');
+                }
+                if(url == ""){
+                    $("#addedmovieurldiv").removeClass('invisible');
+                }
+                if(imdbURL == ""){
+                    $("#addedmovieimdburldiv").removeClass('invisible');
+                }
+            }
+        }
+
+        $( "#moviename" ).focus(function() {
+            $("#addedmovienamediv").addClass('invisible');
+        });
+        $( "#releaseyear" ).focus(function() {
+            $("#addedmovieyeardiv").addClass('invisible');
+        });
+        $( "#movieURL" ).focus(function() {
+            $("#addedmovieurldiv").addClass('invisible');
+        });
+        $( "#imdbURL" ).focus(function() {
+            $("#addedmovieimdburldiv").addClass('invisible');
+        });
+
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+            });
+            }, false);
+        })();
+    </script>
+
+</body>
+
+</html>
