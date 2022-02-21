@@ -15,20 +15,20 @@ class User(db.Model, UserMixin):
         return (self.email)
 
 class Movie(db.Model, UserMixin):
-    id = db.Column(db.String(30), unique=True, primary_key = True)
-    imdb_id = db.Column(db.String(10), unique=True, nullable=False)
-    name = db.Column(db.String(30), nullable = False)
+    id = db.Column(db.String(100), unique=True, primary_key = True)
+    imdb_id = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable = False)
     original_name = db.Column(db.Text, nullable = False)
-    release_year = db.Column(db.String(10), nullable = False)
-    posterLink = db.Column(db.String(50), unique=True, nullable=False)
-    directLink = db.Column(db.String(100), unique=True, nullable = False)
-    genre = db.Column(db.String(50), nullable = False)
-    language = db.Column(db.String(50), nullable = False)
-    imdb_rating = db.Column(db.String(10), nullable = False)
-    runtime = db.Column(db.String(10), nullable = False)
+    release_year = db.Column(db.String(100), nullable = False)
+    posterLink = db.Column(db.Text, unique=True, nullable=False)
+    directLink = db.Column(db.Text, unique=True, nullable = False)
+    genre = db.Column(db.String(100), nullable = False)
+    language = db.Column(db.String(100), nullable = False)
+    imdb_rating = db.Column(db.String(100), nullable = False)
+    runtime = db.Column(db.String(100), nullable = False)
     is_adult = db.Column(db.Boolean, nullable=False)
     is_archived = db.Column(db.Boolean, nullable=False, default=False)
-    watch_count = db.Column(db.String(30), nullable=False, default=0)
+    watch_count = db.Column(db.String(100), nullable=False, default=0)
 
 
 class MovieRequest(db.Model, UserMixin):
