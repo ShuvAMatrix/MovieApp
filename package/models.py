@@ -11,8 +11,12 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(50), nullable = False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     watched_movies = db.Column(db.Text, nullable = True)
+
     def get_id(self):
         return (self.email)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.email)
 
 class Movie(db.Model, UserMixin):
     id = db.Column(db.String(100), unique=True, primary_key = True)
@@ -32,8 +36,22 @@ class Movie(db.Model, UserMixin):
 
 
 class MovieRequest(db.Model, UserMixin):
-    id = db.Column(db.String(30), unique=True, primary_key = True)
-    imdb_id = db.Column(db.String(10), unique=True, nullable=False)
-    name = db.Column(db.String(30), nullable = False)
-    original_name = db.Column(db.String(30), nullable = True)
-    release_year = db.Column(db.String(10), nullable = False)
+    id = db.Column(db.String(100), unique=True, primary_key = True)
+    imdb_id = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable = False)
+    original_name = db.Column(db.String(100), nullable = True)
+    release_year = db.Column(db.String(100), nullable = False)
+
+    def __repr__(self):
+        return '<MovieRequest {0} {1}>'.format(self.id, self.imdb_id)
+
+
+class SavedMovies(db.Model, UserMixin):
+    id = db.Column(db.String(100), unique=True, primary_key = True)
+    imdb_id = db.Column(db.String(100), unique=True, nullable=False)
+    keywords = db.Column(db.String(100), nullable=False)
+    tmdb_data = db.Column(db.Text, unique=True, nullable=False)
+    omdb_data = db.Column(db.Text, unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<MovieRequest {0} {1}>'.format(self.id, self.imdb_id)

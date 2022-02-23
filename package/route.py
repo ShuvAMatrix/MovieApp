@@ -5,10 +5,11 @@ from flask import render_template
 import random
 import os
 import csv
+import json
 from package.main import getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies
 from flask_login import login_user, current_user, logout_user, login_required
 from package import app, db
-from package.models import Movie, User
+from package.models import Movie, SavedMovies, User
 from package.cutomClasses import CustomThread
 import threading
 import time
@@ -20,7 +21,6 @@ genreDict = getGenre()
 @app.route("/login", methods={"GET", "POST"})
 def login():
     if current_user.is_authenticated:
-        print(current_user)
         return redirect("/home")
     if request.method == "POST":
         email =  request.form["mail"]
@@ -32,7 +32,6 @@ def login():
             else:
                 login_user(user)
             next_page = request.args.get('next')
-            print(next_page)
             flash("Welcome Back", "success")
             return redirect(next_page) if next_page else redirect("/all")
         else:
@@ -43,14 +42,17 @@ def login():
 @app.route("/", methods={"GET", "POST"})
 @login_required
 def view():
-    # movies = Movie.query.filter_by(is_archived=False).all()
-    # return render_template("index.html", movies=movies, user=current_user)
-    tile_per_row = 4
-    results = Movie.query.filter_by(is_archived=False).all()
-    moviesLists = []
-    for i in range(0, len(results), tile_per_row):
-        moviesLists.append(results[i:i+tile_per_row]) 
-    return render_template("view.html", moviesLists=moviesLists, user=current_user)
+    movies = Movie.query.filter_by(is_archived=False).all()
+    popularMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()[:4]
+    newMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()[:4]
+    animeMovies = Movie.query.filter_by(is_archived=False).filter(Movie.genre.contains("Animation")).all()[:4]
+    return render_template("index.html", popularMovies=popularMovies, newMovies=newMovies, animeMovies=animeMovies, user=current_user)
+    # tile_per_row = 4
+    # results = Movie.query.filter_by(is_archived=False).all()
+    # moviesLists = []
+    # for i in range(0, len(results), tile_per_row):
+    #     moviesLists.append(results[i:i+tile_per_row]) 
+    # return render_template("view.html", moviesLists=moviesLists, user=current_user)
 
 
 @app.route("/googlesearch/<query>", methods={"GET", "POST"})
@@ -143,6 +145,33 @@ def delete(id):
         return redirect("/bin")
 
 
+
+@app.route("/new", methods={"GET", "POST"})
+@login_required
+def new():
+    tile_per_row = 4
+    moviesLists = []
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
+        for i in range(0, len(results), tile_per_row):
+            moviesLists.append(results[i:i+tile_per_row]) 
+        return render_template("view.html", moviesLists=moviesLists, user=current_user)
+
+
+
+@app.route("/popular", methods={"GET", "POST"})
+@login_required
+def popular():
+    tile_per_row = 4
+    moviesLists = []
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()
+        for i in range(0, len(results), tile_per_row):
+            moviesLists.append(results[i:i+tile_per_row]) 
+        return render_template("view.html", moviesLists=moviesLists, user=current_user)
+
+
+
 @app.route("/restore/<id>", methods={"GET", "POST"})
 @login_required
 def restore(id):
@@ -159,19 +188,26 @@ def restore(id):
 @app.route("/details/<id>", methods={"GET", "POST"})
 @login_required
 def details(id):
+    movie = Movie.query.filter_by(id=id).first()
+    tmdb_info = {}
+    omdb_info = {}
+    related_movies = []
     if request.method == "GET":
-        movie = Movie.query.filter_by(id=id).first()
-        tmdb_info = {}
-        omdb_info = {}
-        related_movies = []
+        saved_movie = SavedMovies.query.filter_by(id=id).first()
+        if not saved_movie:
+            tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
+            save_movie = SavedMovies(id=id, imdb_id=movie.imdb_id, keywords=movie.name, tmdb_data=json.dumps(tmdb_info), omdb_data=json.dumps(omdb_info))
+            db.session.add(save_movie)
+            db.session.commit()
+        else:
+            tmdb_info = json.loads(saved_movie.tmdb_data)
+            omdb_info = json.loads(saved_movie.omdb_data)
 
         #For testing
-        from package.cutomClasses import tmdb_info, omdb_info
+        # from package.cutomClasses import tmdb_info, omdb_info
 
         #Without threading
-        tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
         related_movies = fetchSimilarMovies(movie)
-        
         #With Threading
         # t1 = CustomThread(target=fetchAllDetails, args=(id, movie.imdb_id, ))
         # t2 = CustomThread(target=fetchSimilarMovies, args=(movie,))
@@ -179,5 +215,4 @@ def details(id):
         # t2.start()
         # tmdb_info, omdb_info = t1.join()
         # related_movies = t2.join()
-        print(related_movies)
         return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies)

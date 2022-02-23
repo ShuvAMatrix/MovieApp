@@ -61,7 +61,7 @@ def getAddMovieDetails(url):
                 id = details["id"]
                 original_name = details["original_title"]
                 posterLink = imdb_image_prefix +  details["poster_path"]
-                print(posterLink)
+                # print(posterLink)
                 is_adult = details["adult"]
     except:
         from package.route import genreDict
@@ -108,13 +108,13 @@ def gsearch(q):
 def getTMDBRes(id):
     movie_url = "https://api.themoviedb.org/3/movie/"+id+"?api_key=" +TMDB_API_KEY+"&language=en-US"
     response = requests.get(movie_url).json()
-    print(movie_url)
+    # print(movie_url)
     return response
 
 def getOMDBRes(imdb_id):
     omdb_url = "https://www.omdbapi.com/?i=" + imdb_id + "&apikey=" + OMDB_API_KEY
     response = requests.get(omdb_url).json()
-    print(omdb_url)
+    # print(omdb_url)
     return response
 
 

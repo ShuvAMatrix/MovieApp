@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
+from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
 project_folder = os.path.expanduser('/')
@@ -20,6 +20,8 @@ OMDB_API_KEY = os.environ.get("OMDB_API_KEY")
 imdb_title_prefix = "https://www.imdb.com/title/"
 imdb_image_prefix = "https://image.tmdb.org/t/p/w500"
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'

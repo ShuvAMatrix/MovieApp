@@ -1,1 +1,85 @@
 {% extends 'base.html' %}
+{% block extracss %}
+    <style>
+        .row-link{
+            color:white;
+        }
+        .row-link:hover{
+            color:springgreen;
+        }
+    </style>
+{% endblock extracss %}
+{% block body %}
+<div class="container text-white text-center">
+    <div class="row mb-5">
+        <div class="h1 my-5">
+            Download latest movies in high quality
+        </div>
+        <div class="h5">
+            No waiting time * No advertisements
+        </div>
+        <div class="h5">
+            Direct Download link for all the movies
+        </div>
+    </div>
+    <hr>
+    <div class="row text-white my-5">
+        <div class="row mt-3">
+            <div class="h3 col-6 text-left">New Movies</div>
+            <div class="fs-6 col-6 text-right"><a class="text-decoration-none row-link" href="/new">View All</a></div>
+        </div>
+        <div class="row mb-2 g-2">
+            {% for movie in newMovies %}
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <a href="/details/{{movie.id}}">
+                        <img class="img-fluid img-thumbnail thumb_movie" src="{{movie.posterLink}}" style="max-width: 30vh;">
+                    </a>
+                    <div class="mx-1 text-white"><b>{{movie.name}}</b></div>
+                    <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{{movie.release_year}}</div>
+                </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    <hr>
+    <div class="row text-white my-5">
+        <div class="row mt-3">
+            <div class="h3 col-6 text-left">Popular Movies</div>
+            <div class="fs-6 col-6 text-right"><a class="text-decoration-none row-link" href="/popular">View All</a></div>
+        </div>
+        <div class="row mb-2 g-2">
+            {% for movie in popularMovies %}
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <a href="/details/{{movie.id}}">
+                        <img class="img-fluid img-thumbnail thumb_movie" src="{{movie.posterLink}}" style="max-width: 30vh;">
+                    </a>
+                    <div class="mx-1 text-white"><b>{{movie.name}}</b></div>
+                    <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{{movie.release_year}}</div>
+                </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    <hr>
+    <div class="row text-white my-5">
+        <div class="row mt-3">
+            <div class="h3 col-6 text-left">Anime Movies</div>
+            <div class="fs-6 col-6 text-right"><a class="text-decoration-none row-link" href="/category/Animation">View All</a></div>
+        </div>
+        <div class="row mb-2 g-2">
+            {% for movie in animeMovies %}
+                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                    <a href="/details/{{movie.id}}">
+                        <img class="img-fluid img-thumbnail thumb_movie" src="{{movie.posterLink}}" style="max-width: 30vh;">
+                    </a>
+                    <div class="mx-1 text-white"><b>{{movie.name}}</b></div>
+                    <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{{movie.release_year}}</div>
+                </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    
+</div>
+    
+{% endblock body %}
