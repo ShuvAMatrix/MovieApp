@@ -107,7 +107,7 @@ def category(cat):
         movieLists.append(temp[j:j+tile_per_row])
 
     temp = cat
-    return render_template("view.html", moviesLists=movieLists, user=current_user, cat=cat)
+    return render_template("view.html", moviesLists=movieLists, user=current_user, cat=cat, active=cat)
 
 
 @app.route("/archive/<id>", methods={"GET", "POST"})
@@ -216,3 +216,20 @@ def details(id):
         # tmdb_info, omdb_info = t1.join()
         # related_movies = t2.join()
         return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies)
+
+
+@app.route("/language/<lang>", methods={"GET", "POST"})
+@login_required
+def language(lang):
+    tile_per_row = 4
+    moviesLists = []
+    langMovies = []
+    d = {"bengali":"active", "english":"active"}
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        for i in results:
+            if lang.casefold() in i.language.casefold():
+                langMovies.append(i)
+        for i in range(0, len(langMovies), tile_per_row):
+            moviesLists.append(langMovies[i:i+tile_per_row]) 
+        return render_template("view.html", moviesLists=moviesLists, user=current_user, active=lang)

@@ -28,9 +28,9 @@
         body{
             font-family: 'Open Sans', sans-serif;
         }
-        .dropdown:hover .dropdown-menu{
+        /* .dropdown:hover .dropdown-menu{
             display: block;
-        }
+        } */
         .columns{
             float: left;
             position: relative;
@@ -128,58 +128,94 @@
                         </a>
                         <ul class="dropdown-menu columns bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
                             <li>
-                                <a class="dropdown-item {{action}}" href="/category/Action">Action</a>
+                                <a class="dropdown-item {% if active == 'Action' %}
+                                    active
+                                {% endif %}" href="/category/Action">Action</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Adventure">Adventure</a>
+                                <a class="dropdown-item {% if active == 'Adventure' %}
+                                active
+                            {% endif %}" href="/category/Adventure">Adventure</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Animation">Animation</a>
+                                <a class="dropdown-item {% if active == 'Animation' %}
+                                active
+                            {% endif %}" href="/category/Animation">Animation</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Comedy">Comedy</a>
+                                <a class="dropdown-item {% if active == 'Comedy' %}
+                                active
+                            {% endif %}" href="/category/Comedy">Comedy</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Crime">Crime</a>
+                                <a class="dropdown-item {% if active == 'Crime' %}
+                                active
+                            {% endif %}" href="/category/Crime">Crime</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Documentary">Documentary</a>
+                                <a class="dropdown-item {% if active == 'Documentary' %}
+                                active
+                            {% endif %}" href="/category/Documentary">Documentary</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Drama">Drama</a>
+                                <a class="dropdown-item {% if active == 'Drama' %}
+                                active
+                            {% endif %}" href="/category/Drama">Drama</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Family">Family</a>
+                                <a class="dropdown-item {% if active == 'Family' %}
+                                active
+                            {% endif %}" href="/category/Family">Family</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Fantasy">Fantasy</a>
+                                <a class="dropdown-item {% if active == 'Fantasy' %}
+                                active
+                            {% endif %}" href="/category/Fantasy">Fantasy</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/History">History</a>
+                                <a class="dropdown-item {% if active == 'History' %}
+                                active
+                            {% endif %}" href="/category/History">History</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Horror">Horror</a>
+                                <a class="dropdown-item {% if active == 'Horror' %}
+                                active
+                            {% endif %}" href="/category/Horror">Horror</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Music">Music</a>
+                                <a class="dropdown-item {% if active == 'Music' %}
+                                active
+                            {% endif %}" href="/category/Music">Music</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Mystery">Mystery</a>
+                                <a class="dropdown-item {% if active == 'Mystery' %}
+                                active
+                            {% endif %}" href="/category/Mystery">Mystery</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Romance">Romance</a>
+                                <a class="dropdown-item {% if active == 'Romance' %}
+                                active
+                            {% endif %}" href="/category/Romance">Romance</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Science Fiction">Science Fiction</a>
+                                <a class="dropdown-item {% if active == 'Science Fiction' %}
+                                active
+                            {% endif %}" href="/category/Science Fiction">Science Fiction</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/TV Movie">TV Movie</a>
+                                <a class="dropdown-item {% if active == 'TV Movie' %}
+                                active
+                            {% endif %}" href="/category/TV Movie">TV Movie</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/Thriller">Thriller</a>
+                                <a class="dropdown-item {% if active == 'Thriller' %}
+                                active
+                            {% endif %}" href="/category/Thriller">Thriller</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/category/War">War</a>
+                                <a class="dropdown-item {% if active == 'War' %}
+                                active
+                            {% endif %}" href="/category/War">War</a>
                             </li>
                             <!-- <li>
                                 <a class="dropdown-item" href="/category/Western">Western</a>
@@ -197,6 +233,28 @@
                             <span class="sr-only">(current)</span>
                         </a>
 
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                          Language
+                        </a>
+                        <ul class="dropdown-menu bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
+                            <li>
+                                <a class="dropdown-item {% if active == 'bengali' %}
+                                    active
+                                {% endif %}" href="/language/bengali">Bengali</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if active == 'hindi' %}
+                                    active
+                                {% endif %}" href="/language/hindi">Hindi</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if active == 'japanese' %}
+                                    active
+                                {% endif %}" href="/language/japanese">Japanese</a>
+                            </li>
+                        </ul>
                     </li>
                     {% if user.admin %}
                     <li class="nav-item {{v}} mx-2">
@@ -558,19 +616,20 @@
                     </div>
                 </div>
                 <!--Modal: Modal Add Movie-->
-                <form class="d-flex ml-2 input-group w-auto">
-                    <input
-                      type="search"
-                      class="form-control rounded loading"
-                      placeholder="Search"
-                      aria-label="Search"
-                      ari0a-describedby="search-addon"
-                    />
-                    <span class="bg-dark input-group-text text-white border-0" id="search-addon">
-                      <i class="fas fa-search"></i>
-                    </span>
-                  </form>
-
+                <div class="d-none d-lg-block d-md-block d-xl-block ">
+                    <form class="d-flex ml-2 input-group w-auto">
+                        <input
+                          type="search"
+                          class="form-control rounded loading"
+                          placeholder="Search"
+                          aria-label="Search"
+                          ari0a-describedby="search-addon"
+                        />
+                        <span class="bg-dark input-group-text text-white border-0" id="search-addon">
+                          <i class="fas fa-search"></i>
+                        </span>
+                      </form>
+                </div>
             </div>
         <!-- Collapsible content -->
     </div>
@@ -591,6 +650,24 @@
             {% endfor %}
             {% endif %}
         {% endwith %}
+
+        <div class="col-12 mt-3 mb-5">
+            <div class="d-block d-xs-block d-sm-block d-md-none">
+                <form class="d-flex ml-2 input-group w-auto">
+                    <input
+                    type="search"
+                    id="littleSearch"
+                    class="form-control rounded loading"
+                    placeholder="Search"
+                    aria-label="Search"
+                    ari0a-describedby="search-addon"
+                    />
+                    <span style="background-color: #212529;" class="input-group-text text-white border-0" id="search-addon">
+                    <i class="fas fa-search"></i>
+                    </span>
+                </form>
+            </div>
+        </div>
         {% block body %}
             
         {% endblock body %}
@@ -615,7 +692,6 @@
     <script type="text/javascript">
         $(document).ready(function() {
         var columnCount = $(".columns li").length;
-        console.log(columnCount)
         if (columnCount <= 10) {
             $(".columns").addClass("one-col");
         } else{
@@ -711,6 +787,25 @@
             });
             }, false);
         })();
+
+        let lilSearchBox = document.getElementById("littleSearch");
+        var query = "";
+        lilSearchBox.addEventListener("keydown", function onEvent(event) {
+            if((event.keyCode >= 48 && event.keyCode <= 59) || (event.keyCode >= 65 && event.keyCode <= 90)|| 
+            (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode==32 || (event.keyCode >= 186 && event.keyCode <= 190)){
+                query += event.key
+            }
+            if(event.keyCode == 8){
+                query = query.slice(0, -1) 
+                
+            }
+            if(lilSearchBox.hasAttribute("autocompleted")){
+                query=event.key
+            }
+            console.log(query)
+            
+        });
+        
     </script>
 
 </body>
