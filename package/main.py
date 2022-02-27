@@ -16,9 +16,9 @@ ua = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
 
 
 def getGenre():
-    response = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key=9f16ee7e4aa4dd9b2ce1f9c17efa52eb&language=en-US", headers=ua)
+    response = {"genres":[{"id":28,"name":"Action"},{"id":12,"name":"Adventure"},{"id":16,"name":"Animation"},{"id":35,"name":"Comedy"},{"id":80,"name":"Crime"},{"id":99,"name":"Documentary"},{"id":18,"name":"Drama"},{"id":10751,"name":"Family"},{"id":14,"name":"Fantasy"},{"id":36,"name":"History"},{"id":27,"name":"Horror"},{"id":10402,"name":"Music"},{"id":9648,"name":"Mystery"},{"id":10749,"name":"Romance"},{"id":878,"name":"Science Fiction"},{"id":10770,"name":"TV Movie"},{"id":53,"name":"Thriller"},{"id":10752,"name":"War"},{"id":37,"name":"Western"}]}
     genreList = {}
-    for i in response.json()["genres"]:
+    for i in response["genres"]:
         genreList[i["id"]] = i["name"]
     return genreList
 

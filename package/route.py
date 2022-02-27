@@ -64,6 +64,7 @@ def add():
         movie_URL = request.form["movieURL"]
         imdb_URL = request.form["imdbURL"]
         id, original_name, posterLink, genre, release_year, is_adult, rating, imdb_id, movie_name, runtime, language = getAddMovieDetails(imdb_URL)
+        id = str(id)
         em = Movie.query.filter_by(id=id).first()
         if em:
             flash(f"Movie is already added!", "warning")
@@ -306,7 +307,10 @@ def requestmovie(string):
         id = temp[1]
         rm = MovieRequest.query.filter_by(id=id).first()
         if rm:
-            flash(f"You have already requested this Movie!", "warning")
+            if rm.requestor != current_user.email:
+                flash(f"Movie request submitted!", "success")
+            else:
+                flash(f"You have already requested this Movie!", "warning")
             return redirect("/requestdashboard")
         imdb_url = imdb_title_prefix + temp[0]
         movie = SavedMovies.query.filter_by(id=id).first()
