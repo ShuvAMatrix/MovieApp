@@ -7,7 +7,12 @@
                 <img class="img-fluid z-depth-2 img-thumbnail rounded" style="max-height: 70vh;"
                     src="{{movie.posterLink}}" alt="{{movie.name}}">
                 <div class="text-center align-items-center my-4" style="background-color: rgb(29, 29, 29);">
-                    <button name="save" id="copyurl" value="" class="btn btn-outline-success btn-rounded btn-md mr-2"
+                    
+                    {% if user.admin %}
+                        <button name="save" id="btn-ok" value=""
+                        class="btn btn-outline-success btn-rounded btn-md mr-2" onclick="location.href = '/edit/{{movie.id}}'">Edit</button>       
+                    {% else %}
+                        <button name="save" id="copyurl" value="" class="btn btn-outline-success btn-rounded btn-md mr-2"
                         onclick="
                         var copyText ='{{ movie.directLink }}'
                         console.log(copyText)
@@ -25,6 +30,9 @@
                             confirmButtonText: 'Okay',
                             timer: 2000
                         })">Copy</button>
+                    {% endif %}
+
+                    
                     <button name="save" id="btn-ok" value="" class="btn btn-success btn-rounded btn-md mx-2" onclick="
                             Swal.fire({
                                 imageUrl: '../../../static/img/spinner.gif',
@@ -107,7 +115,7 @@
                                     ">Download</button>
                                 {% if user.admin %}
                                 <button name="save" id="btn-ok" value=""
-                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="">Edit</button>
+                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="location.href = '/edit/{{movie.id}}'">Edit</button>
                                 {% if movie.is_archived %}
                                 <button name="save" id="btn-ok" value=""
                                     class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
@@ -228,7 +236,13 @@
                         <div class=""><img style="max-width:48px;" src="../../../static/img/imdb.png"></div>
                     </div>
                     <div class="col-3 mx-4 text-left">
-                        <div class="mx-3">{{movie.imdb_rating}}/10</div>
+                        <div class="mx-3">
+                            {% if movie.imdb_rating == "N/A" %}
+                                NA
+                            {% else %}
+                                {{movie.imdb_rating}}/10
+                            {% endif %}
+                            </div>
                     </div>
                 </div>
                 {% if omdb_info["Ratings"] %}

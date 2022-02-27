@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container text-center mt-2">
+
+  <div class="h2 mb-5 text-white">
+    Edit Movie Details
+  </div>
+
+  <form method="POST" action="">
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example1" name="name" value="{{movie.name}}" class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example1">Movie Name</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="original_name" value="{{movie.original_name}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Original Name</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example1" name="posterLink" value="{{movie.posterLink}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example1">Poster Link</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="genre" value="{{movie.genre}}" class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Genre</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example1" name="id" value="{{movie.id}}" class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example1">ID</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="imdb_id" value="{{movie.imdb_id}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">IMDB ID</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="number" id="form6Example2" name="year" value="{{movie.release_year}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Release Year</label>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example1" name="rating" value="{{movie.imdb_rating}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example1">IMDB Rating</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="runtime" value="{{movie.runtime}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Runtime</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="language" value="{{movie.language}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Language</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example1" name="is_adult" value="{{movie.is_adult}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example1">Is Adult</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="text" id="form6Example2" name="is_archived" value="{{movie.is_archived}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Is Archived</label>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-outline">
+          <input type="number" id="form6Example2" name="watch_count" value="{{movie.watch_count}}"
+            class="form-control text-white" />
+          <label class="form-label text-white" for="form6Example2">Watch Count</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-outline mb-4">
+      <input type="text" id="form6Example4" name="directLink" value="{{movie.directLink}}"
+        class="form-control text-white" />
+      <label class="form-label text-white" for="form6Example4">Direct Link</label>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-4 mt-4">
+        <button type="submit" class="btn btn-outline-success btn-rounded btn-block mb-4">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock body %}

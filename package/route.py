@@ -1,6 +1,7 @@
 from ast import keyword
 from cProfile import run
 from multiprocessing.sharedctypes import Value
+from turtle import pos
 from unittest import result
 from urllib import response
 from flask import Flask, request, redirect, flash
@@ -165,7 +166,8 @@ def popular():
     tile_per_row = 4
     moviesLists = []
     if request.method == "GET":
-        results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()
+        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
         for i in range(0, len(results), tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
         return render_template("view.html", moviesLists=moviesLists, user=current_user, popular="active")
@@ -355,3 +357,55 @@ def denyrequest(id):
         db.session.add(requestedMovie)
         db.session.commit()
         return redirect("/requestdashboard")
+
+
+@app.route("/edit/<id>", methods={"GET", "POST"})
+@login_required
+def edit(id):
+    if request.method == "GET":
+        movie = Movie.query.filter_by(id=id).first()
+        return render_template("edit.html", user=current_user, value="hidden", movie=movie)
+    if request.method == "POST":
+        id = request.form["id"]
+        imdb_id = request.form["imdb_id"]
+        name = request.form["name"]
+        original_name = request.form["original_name"]
+        release_year = request.form["year"]
+        posterLink = request.form["posterLink"]
+        directLink = request.form["directLink"]
+        genre = request.form["genre"]
+        language = request.form["language"]
+        imdb_rating = request.form["rating"]
+        runtime = request.form["runtime"]
+        is_adult = request.form["is_adult"]
+        is_archived = request.form["is_archived"]
+        watch_count = request.form["watch_count"]
+        movie = Movie.query.filter_by(id=id).first()
+        movie.id = id
+        movie.imdb_id = imdb_id
+        movie.name = name
+        movie.original_name = original_name
+        movie.release_year = release_year
+        movie.posterLink = posterLink
+        movie.directLink = directLink
+        movie.genre = genre
+        movie.language = language
+        movie.imdb_rating = imdb_rating
+        movie.runtime = runtime
+
+        if is_adult.casefold() == "False".casefold():
+            movie.is_adult = False
+        elif is_adult.casefold() == "True".casefold():
+            movie.is_adult = True
+        
+        if is_archived.casefold() == "False".casefold():
+            movie.is_archived = False
+        elif is_archived.casefold() == "True".casefold():
+            movie.is_archived = True
+        
+        movie.watch_count = watch_count
+        db.session.add(movie)
+        db.session.commit()
+        flash(f"Movie has been updated!", "success")
+        redirect_url = "/details/"+id
+        return redirect(redirect_url)
