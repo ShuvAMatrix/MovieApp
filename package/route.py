@@ -85,7 +85,7 @@ def all():
     moviesLists = []
     for i in range(0, len(results), tile_per_row):
         moviesLists.append(results[i:i+tile_per_row]) 
-    return render_template("view.html", moviesLists=moviesLists, user=current_user)
+    return render_template("view.html", moviesLists=moviesLists, user=current_user, all="active")
 
 
 @app.route("/category/<cat>", methods={"GET", "POST"})
@@ -107,7 +107,7 @@ def category(cat):
         movieLists.append(temp[j:j+tile_per_row])
 
     temp = cat
-    return render_template("view.html", moviesLists=movieLists, user=current_user, cat=cat, active=cat)
+    return render_template("view.html", moviesLists=movieLists, user=current_user, cat=cat, active=cat, category="active")
 
 
 @app.route("/archive/<id>", methods={"GET", "POST"})
@@ -131,7 +131,7 @@ def bin():
         moviesLists = []
         for i in range(0, len(results), tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user)
+        return render_template("view.html", moviesLists=moviesLists, user=current_user, bin="active")
 
 
 @app.route("/delete/<id>", methods={"GET", "POST"})
@@ -155,7 +155,7 @@ def new():
         results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
         for i in range(0, len(results), tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user)
+        return render_template("view.html", moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -168,7 +168,7 @@ def popular():
         results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()
         for i in range(0, len(results), tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user)
+        return render_template("view.html", moviesLists=moviesLists, user=current_user, popular="active")
 
 
 
@@ -232,7 +232,7 @@ def language(lang):
                 langMovies.append(i)
         for i in range(0, len(langMovies), tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user, active=lang)
+        return render_template("view.html", moviesLists=moviesLists, user=current_user, active=lang, language="active")
 
 
 @app.route("/apisearch/<query>", methods={"GET", "POST"})
@@ -331,7 +331,7 @@ def requestdashboard():
     if request.method == "GET":
         unFulfilled = MovieRequest.query.filter_by(isfulfilled=False).all()
         fulfilled = MovieRequest.query.filter_by(isfulfilled=True).all()
-        return render_template("requests.html", user=current_user, unFulfilled=unFulfilled, fulfilled=fulfilled, value="hidden", requestdashboard="active")
+        return render_template("requests.html", user=current_user, unFulfilled=unFulfilled, fulfilled=fulfilled, value="hidden", requestdashboard="active", admincorner="active")
 
 
 @app.route("/acceptrequest/<id>", methods={"GET", "POST"})

@@ -57,12 +57,12 @@
 
                 <!-- Links -->
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {{w}} mx-3">
+                    <li class="nav-item {{all}} mx-3">
                         <a class="nav-link" href="/all">All
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                   <li class="nav-item dropdown mx-2">
+                   <li class="nav-item {{category}} dropdown mx-2">
                         <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                           Genres
                         </a>
@@ -159,19 +159,19 @@
                             </li>
                         </ul>
                       </li>
-                    <li class="nav-item {{z}} mx-2">
+                    <li class="nav-item {{new}} mx-2">
                         <a class="nav-link" href="/new">New
                             <span class="sr-only">(current)</span>
                         </a>
 
                     </li>
-                    <li class="nav-item {{v}} mx-2">
+                    <li class="nav-item {{popular}} mx-2">
                         <a class="nav-link" href="/popular">Popular
                             <span class="sr-only">(current)</span>
                         </a>
 
                     </li>
-                    <li class="nav-item dropdown mx-2">
+                    <li class="nav-item dropdown {{language}} mx-2">
                         <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
                           Language
                         </a>
@@ -194,20 +194,20 @@
                         </ul>
                     </li>
                     {% if user.admin %}
-                    <li class="nav-item dropdown mx-2">
-                        <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                          Admin Corner
-                        </a>
-                        <ul class="dropdown-menu bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
-                            <li>
-                                <a class="dropdown-item {{requestdashboard}}" href="/requestdashboard">Request Dashboard</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item {{settings}}" href="/settings">Settings</a>
-                            </li>
-                        </ul>
+                        <li class="nav-item dropdown {{admincorner}} mx-2">
+                            <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                            Admin Corner
+                            </a>
+                            <ul class="dropdown-menu bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
+                                <li>
+                                    <a class="dropdown-item {{requestdashboard}}" href="/requestdashboard">Request Dashboard</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{settings}}" href="/settings">Settings</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item {{v}} mx-2">
+                        <li class="nav-item {{bin}} mx-2">
                             <a class="nav-link" href="/bin">Archived
                                 <span class="sr-only">(current)</span>
                             </a>
