@@ -1,9 +1,3 @@
-from ast import keyword
-from cProfile import run
-from multiprocessing.sharedctypes import Value
-from turtle import pos
-from unittest import result
-from urllib import response
 from flask import Flask, request, redirect, flash
 from flask import render_template
 import json
