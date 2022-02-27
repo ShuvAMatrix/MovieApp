@@ -45,8 +45,10 @@ def initialize():
     db.drop_all()
     db.create_all()
     from package.models import User
-    user = User(email="shuvamgg@gmail.com", password="shuvam1234", admin=True)
-    db.session.add(user)
+    user1 = User(email="shuvamgg@gmail.com", password="shuvam1234", admin=True)
+    user2 = User(email="shuvamg73@gmail.com", password="shuvam1234", admin=False)
+    db.session.add(user1)
+    db.session.add(user2)
     db.session.commit()
 
 from package import app

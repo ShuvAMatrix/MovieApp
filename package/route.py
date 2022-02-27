@@ -1,15 +1,15 @@
+from ast import keyword
 from cProfile import run
+from multiprocessing.sharedctypes import Value
+from unittest import result
 from urllib import response
 from flask import Flask, request, redirect, flash
 from flask import render_template
-import random
-import os
-import csv
 import json
-from package.main import getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies
+from package.main import findIMDBid, getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies, apisearch, getOMDBRes, getTMDBRes, fetchSavedSimilarMovies
 from flask_login import login_user, current_user, logout_user, login_required
-from package import app, db
-from package.models import Movie, SavedMovies, User
+from package import app, db, imdb_image_prefix, imdb_title_prefix
+from package.models import Movie, SavedMovies, User, SavedQueries, MovieRequest
 from package.cutomClasses import CustomThread
 import threading
 import time
@@ -215,7 +215,7 @@ def details(id):
         # t2.start()
         # tmdb_info, omdb_info = t1.join()
         # related_movies = t2.join()
-        return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies)
+        return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
 
 
 @app.route("/language/<lang>", methods={"GET", "POST"})
@@ -233,3 +233,125 @@ def language(lang):
         for i in range(0, len(langMovies), tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
         return render_template("view.html", moviesLists=moviesLists, user=current_user, active=lang)
+
+
+@app.route("/apisearch/<query>", methods={"GET", "POST"})
+@login_required
+def apisearchq(query):
+    savedQuery = SavedQueries.query.filter_by(keyword=query.casefold()).first()
+    if savedQuery:
+        print("from save")
+        return json.loads(savedQuery.data)
+    else:
+        result = apisearch(query)
+        saveQuery = SavedQueries(keyword = query.casefold(), data=json.dumps(result))
+        db.session.add(saveQuery)
+        db.session.commit()
+        return result
+    
+
+
+@app.route("/moviedetails/<id>", methods={"GET", "POST"})
+@login_required
+def moviedetails(id):
+    if request.method == "GET":
+        movie = Movie.query.filter_by(id=id).first()
+        tmdb_info = {}
+        omdb_info = {}
+        related_movies = []
+        if movie:
+            saved_movie = SavedMovies.query.filter_by(id=id).first()
+            if not saved_movie:
+                tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
+                save_movie = SavedMovies(id=id, imdb_id=movie.imdb_id, keywords=movie.name, tmdb_data=json.dumps(tmdb_info), omdb_data=json.dumps(omdb_info))
+                db.session.add(save_movie)
+                db.session.commit()
+            else:
+                tmdb_info = json.loads(saved_movie.tmdb_data)
+                omdb_info = json.loads(saved_movie.omdb_data)
+            related_movies = fetchSimilarMovies(movie)
+            return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
+        else:
+            saved_movie = SavedMovies.query.filter_by(id=id).first()
+            if not saved_movie:
+                tmdb_info = getTMDBRes(id)
+                imdb_id = tmdb_info["imdb_id"]
+                if imdb_id == None:
+                    imdb_id = findIMDBid(tmdb_info["title"])
+                omdb_info = getOMDBRes(imdb_id)
+                new_movie = SavedMovies(id=id, imdb_id=imdb_id, keywords=tmdb_info["title"], tmdb_data=json.dumps(tmdb_info), omdb_data=json.dumps(omdb_info))
+                db.session.add(new_movie)
+                db.session.commit()
+            else:
+                tmdb_info = json.loads(saved_movie.tmdb_data)
+                omdb_info = json.loads(saved_movie.omdb_data)
+                imdb_id = tmdb_info["imdb_id"]
+            moviegenre = omdb_info["Genre"]
+            if not moviegenre:
+                moviegenre = ""
+                for i in tmdb_info["genres"]:
+                    moviegenre += i["name"]
+                    moviegenre += ", "
+            fetchSavedSimilarMovies(moviegenre)
+            return render_template("newdetails.html", id=id, user=current_user, imdb_id=imdb_id, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, itp=imdb_title_prefix, iip=imdb_image_prefix, genre=moviegenre, value="hidden")
+
+
+
+@app.route("/request/<string>", methods={"GET", "POST"})
+@login_required
+def requestmovie(string):
+    if request.method == "GET":
+        temp = string.split("+")
+        id = temp[1]
+        rm = MovieRequest.query.filter_by(id=id).first()
+        if rm:
+            flash(f"You have already requested this Movie!", "warning")
+            return redirect("/requestdashboard")
+        imdb_url = imdb_title_prefix + temp[0]
+        movie = SavedMovies.query.filter_by(id=id).first()
+        tmdb_info = json.loads(movie.tmdb_data)
+        if tmdb_info["poster_path"]:
+            posterLink = imdb_image_prefix + tmdb_info["poster_path"]
+        else:
+            posterLink = "/static/img/notAvailable.jpg"
+        name = tmdb_info["title"]
+        original_name = tmdb_info["original_title"]
+        release_year = tmdb_info["release_date"].split("-")[0]
+        requestor = current_user.email
+        requested_movie = MovieRequest(id=id, imdb_URL=imdb_url, posterLink=posterLink, requestor=requestor, release_year=release_year, name=name, original_name=original_name)
+        db.session.add(requested_movie)
+        db.session.commit()
+        flash(f"Movie request submitted!", "success")
+        return redirect("/")
+
+
+@app.route("/requestdashboard", methods={"GET", "POST"})
+@login_required
+def requestdashboard():
+    if request.method == "GET":
+        unFulfilled = MovieRequest.query.filter_by(isfulfilled=False).all()
+        fulfilled = MovieRequest.query.filter_by(isfulfilled=True).all()
+        return render_template("requests.html", user=current_user, unFulfilled=unFulfilled, fulfilled=fulfilled, value="hidden", requestdashboard="active")
+
+
+@app.route("/acceptrequest/<id>", methods={"GET", "POST"})
+@login_required
+def acceptrequest(id):
+    if request.method == "GET":
+        requestedMovie = MovieRequest.query.filter_by(id=id).first()
+        requestedMovie.isfulfilled = True
+        requestedMovie.status = "Approved"
+        db.session.add(requestedMovie)
+        db.session.commit()
+        return redirect("/requestdashboard")
+
+@app.route("/denyrequest/<id>", methods={"GET", "POST"})
+@login_required
+def denyrequest(id):
+    if request.method == "GET":
+        requestedMovie = MovieRequest.query.filter_by(id=id).first()
+        requestedMovie.isfulfilled = True
+        requestedMovie.status = "Rejected"
+        db.session.add(requestedMovie)
+        db.session.commit()
+        return redirect("/requestdashboard")

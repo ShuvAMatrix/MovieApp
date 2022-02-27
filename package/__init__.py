@@ -3,16 +3,23 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 import os
-from dotenv import load_dotenv
-project_folder = os.path.expanduser('/')
-load_dotenv(os.path.join(project_folder, '.env'))
+from dotenv import find_dotenv, load_dotenv
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
+
+#Normal config
 uri = os.environ.get('DATABASE_URL')
 if uri and uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
+
+#For connecting postgres
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+
+#For local database upgrade
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///tasks.db"
+
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 TMDB_API_KEY = os.environ.get("TMDB_API_KEY")

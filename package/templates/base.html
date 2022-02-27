@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.9, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Movies</title>
-    <!-- MDB icon -->
+
     <link rel="icon" href="{{ url_for('static',filename='img/favicon.ico') }}" type="image/x-icon">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-    <!-- Google Fonts Roboto -->
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
     <!-- Material Design Bootstrap -->
@@ -21,72 +24,9 @@
 
     <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/da0ffeb57d.js" crossorigin="anonymous"></script>
-    <!-- Your custom styles (optional) -->
+    <!--custom css-->
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
-
-    <style>
-        body{
-            font-family: 'Open Sans', sans-serif;
-        }
-        /* .dropdown:hover .dropdown-menu{
-            display: block;
-        } */
-        .columns{
-            float: left;
-            position: relative;
-            margin-right: 20px;
-        }
-        .columns.one-col {
-            column-count: 2;
-            overflow-y: auto;
-        }
-        .columns.two-col {
-            column-count: 2;
-            height: auto;
-            overflow-y: auto;
-        }
-        #aboutUsModal{
-            background-color: transparent;
-        }
-        /*
-        .columns.three-col {
-            column-count: 3;
-            overflow: auto;
-            column-fill: auto;
-            page-break-inside: avoid;
-            break-inside: avoid;
-            column-gap: 20px; 
-        }
-        .columns.four-col {
-            column-count: 4;
-            overflow: hidden;
-            
-        } */
-        /* .dropdown-menu{
-            width: 20vw;
-            overflow-y: auto;
-        }
-        .columns.two-col {
-            height: auto;
-            overflow-y: auto;
-            
-        }
-        .dropdown-menu li {
-            line-height: 1.5em;
-            float: left;
-            display: inline;           
-        }
-        #dropdown li {
-            width: 50%;
-        } */
-        #imdbURL.loading {
-            background: url('../../../static/img/loading_sm.gif') no-repeat 99% center;
-        }
-        .thumb_movie:hover{
-            background-color: rgb(0, 255, 128);
-            border:  green;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/custom.css') }}">
     {% block extracss %}
         
     {% endblock extracss %}
@@ -217,9 +157,6 @@
                                 active
                             {% endif %}" href="/category/War">War</a>
                             </li>
-                            <!-- <li>
-                                <a class="dropdown-item" href="/category/Western">Western</a>
-                            </li> -->
                         </ul>
                       </li>
                     <li class="nav-item {{z}} mx-2">
@@ -257,17 +194,24 @@
                         </ul>
                     </li>
                     {% if user.admin %}
-                    <li class="nav-item {{v}} mx-2">
-                        <a class="nav-link" href="#">Settings
-                            <span class="sr-only">(current)</span>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLinks" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                          Admin Corner
                         </a>
-
-                    </li>
-                    <li class="nav-item {{v}} mx-2">
-                        <a class="nav-link" href="/bin">Archived
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
+                        <ul class="dropdown-menu bg-black dropdown-menu-dark" id="dropdown" aria-labelledby="navbarDropdownMenuLinks" data-popper-placement="null" data-mdb-popper="none">
+                            <li>
+                                <a class="dropdown-item {{requestdashboard}}" href="/requestdashboard">Request Dashboard</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{settings}}" href="/settings">Settings</a>
+                            </li>
+                        </ul>
+                        </li>
+                        <li class="nav-item {{v}} mx-2">
+                            <a class="nav-link" href="/bin">Archived
+                                <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
                     {% endif %}
                     
                     <li class="nav-item {{v}} mx-2">
@@ -571,11 +515,6 @@
                             <!--Body-->
                             <div class="modal-body">
                                 <form action="/add" method="POST" id="addMovieForm" class="needs-validation" novalidate>
-                                    <!-- <div class="mt-4 mb-4 form-outline">
-                                        <input type="text" id="moviename" name="moviename" value="" class="form-control"  style="color: rgb(255, 255, 255);"/>
-                                        <label for="moviename" class="form-label" style="color: rgb(166, 181, 194);">Movie Name</label>
-                                        
-                                    </div> -->
                                     <div class="row mb-4 mt-4">
                                         <div class="col">
                                           <div id="movienamediv" class="form-outline">
@@ -616,20 +555,7 @@
                     </div>
                 </div>
                 <!--Modal: Modal Add Movie-->
-                <div class="d-none d-lg-block d-md-block d-xl-block ">
-                    <form class="d-flex ml-2 input-group w-auto">
-                        <input
-                          type="search"
-                          class="form-control rounded loading"
-                          placeholder="Search"
-                          aria-label="Search"
-                          ari0a-describedby="search-addon"
-                        />
-                        <span class="bg-dark input-group-text text-white border-0" id="search-addon">
-                          <i class="fas fa-search"></i>
-                        </span>
-                      </form>
-                </div>
+                
             </div>
         <!-- Collapsible content -->
     </div>
@@ -651,20 +577,24 @@
             {% endif %}
         {% endwith %}
 
-        <div class="col-12 mt-3 mb-5">
-            <div class="d-block d-xs-block d-sm-block d-md-none">
-                <form class="d-flex ml-2 input-group w-auto">
-                    <input
-                    type="search"
-                    id="littleSearch"
-                    class="form-control rounded loading"
-                    placeholder="Search"
-                    aria-label="Search"
-                    ari0a-describedby="search-addon"
-                    />
-                    <span style="background-color: #212529;" class="input-group-text text-white border-0" id="search-addon">
-                    <i class="fas fa-search"></i>
-                    </span>
+        <div {{value}} class="row mt-0 justify-content-center">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-6" style="max-width: 500px; text-align: center;">
+                <form class="d-flex ml-2 mb-5 input-group w-auto">
+                    <div class="container">
+                        <input
+                            type="search"
+                            id="littleSearch"
+                            class="form-control rounded bg-dark text-white"
+                            placeholder="Search"
+                            aria-label="Search"
+                            ari0a-describedby="search-addon"
+                        />
+
+                        <div style="z-index: 10; position: absolute; width: 90%;" class="">
+                            <div id="searchResults" style="min-width: 70%;" class=" container justify-content-center align-items-center">
+                            </div> 
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -681,132 +611,14 @@
     <script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
     <!-- Bootstrap tooltips -->
     <script type="text/javascript" src="{{ url_for('static',filename='js/popper.min.js') }}j"></script>
-    <!-- Bootstrap core JavaScript -->
     <script type="text/javascript" src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="{{ url_for('static',filename='js/mdb.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static',filename='js/require.js') }}"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/require.js') }}"></script> -->
 
     <!-- Your custom scripts (optional) -->
-    <script type="text/javascript">
-        $(document).ready(function() {
-        var columnCount = $(".columns li").length;
-        if (columnCount <= 10) {
-            $(".columns").addClass("one-col");
-        } else{
-            $(".columns").addClass("two-col");
-        }
-    })
-
-        document.getElementById("releaseyear")
-            .addEventListener('change', (e) => {
-                $('#imdbURL').addClass("loading")
-                document.getElementById("imdbURL").value = "";
-                var mname = document.getElementById("moviename").value;
-                var flag = 0
-                var val = e.currentTarget.value;
-                var url = "/googlesearch/"+ mname + " " + val
-                try{
-                    $.get(url, function(response) {
-                        if(response == ""){
-                            document.getElementById("imdbURL").value = "Error! Please fill URL manually"
-                        }
-                        for (let i = 0; i < response["length"]; i++) {
-                            if (response["results"][i].startsWith("https://www.imdb.com/title/")){
-                                document.getElementById("imdbURL").value = response["results"][i];
-                                flag = 1
-                                break
-                            }
-                        }
-                        if(flag == 0){
-                            document.getElementById("imdbURL").value = "Error! Please fill URL manually"
-                        }
-                        document.getElementById("imdbURL").focus();
-                        $('#imdbURL').removeClass("loading")
-                        $('#moviename').addClass("loading")
-                    });
-                }
-                catch{
-                    document.getElementById("imdbURL").value = "Error! Please fill URL manually"
-                }
-            });
-        
-        
-        function submitModalForm(){
-            var moviename = document.getElementById("moviename").value
-            var releaseyear = document.getElementById("releaseyear").value
-            var url = document.getElementById("movieURL").value
-            var imdbURL = document.getElementById("imdbURL").value
-            if(moviename != "" && releaseyear != "" && url != "" && imdbURL != ""){
-                document.getElementById("addMovieForm").submit()
-            }
-            else{
-                if(moviename == ""){
-                    $("#addedmovienamediv").removeClass('invisible');
-                }
-                if(releaseyear == ""){
-                    $("#addedmovieyeardiv").removeClass('invisible');
-                }
-                if(url == ""){
-                    $("#addedmovieurldiv").removeClass('invisible');
-                }
-                if(imdbURL == ""){
-                    $("#addedmovieimdburldiv").removeClass('invisible');
-                }
-            }
-        }
-
-        $( "#moviename" ).focus(function() {
-            $("#addedmovienamediv").addClass('invisible');
-        });
-        $( "#releaseyear" ).focus(function() {
-            $("#addedmovieyeardiv").addClass('invisible');
-        });
-        $( "#movieURL" ).focus(function() {
-            $("#addedmovieurldiv").addClass('invisible');
-        });
-        $( "#imdbURL" ).focus(function() {
-            $("#addedmovieimdburldiv").addClass('invisible');
-        });
-
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-            if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-            }, false);
-            });
-            }, false);
-        })();
-
-        let lilSearchBox = document.getElementById("littleSearch");
-        var query = "";
-        lilSearchBox.addEventListener("keydown", function onEvent(event) {
-            if((event.keyCode >= 48 && event.keyCode <= 59) || (event.keyCode >= 65 && event.keyCode <= 90)|| 
-            (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode==32 || (event.keyCode >= 186 && event.keyCode <= 190)){
-                query += event.key
-            }
-            if(event.keyCode == 8){
-                query = query.slice(0, -1) 
-                
-            }
-            if(lilSearchBox.hasAttribute("autocompleted")){
-                query=event.key
-            }
-            console.log(query)
-            
-        });
-        
-    </script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/custom.js') }}"></script>
 
 </body>
 

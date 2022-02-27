@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib import response
 from flask import request
 import requests
 from package import imdb_image_prefix, imdb_title_prefix, TMDB_API_KEY, OMDB_API_KEY
@@ -6,6 +7,7 @@ import re
 import json
 from googlesearch import search
 import imdb
+from requests.utils import quote
 
 from package.models import Movie
 
@@ -39,6 +41,12 @@ def imdbSearch(name):
     movie_id = res[0].movieID
     url = "https://www.imdb.com/title/tt" + movie_id + "/"
     return url
+
+
+def findIMDBid(name):
+    res = ia.search_movie(name)
+    movie_id = res[0].movieID
+    return "tt"+str(movie_id)
 
 
 def getAddMovieDetails(url):
@@ -135,6 +143,33 @@ def fetchSimilarMovies(movie):
     else:
         for i in movies:
             if movie.id != i.id and "Animation" not in i.genre.split(", "):
+                if set(genre) & set(i.genre.split(", ")):
+                    related_movies.append(i)
+    return related_movies
+
+
+def apisearch(query):
+    url = 'https://api.themoviedb.org/3/search/movie?api_key='+TMDB_API_KEY+'&language=en-US&query='+quote(query)+'&page=1&include_adult=false'
+    response = requests.get(url).json()
+    y = response["results"]
+    y.sort(key=lambda x: float(x["vote_average"]))
+    d = {}
+    d["results"] = y[-5:]
+    d["length"] = response["total_results"]
+    return d
+
+
+def fetchSavedSimilarMovies(moviegenre):
+    related_movies = []
+    movies = Movie.query.filter_by(is_archived=False).all()
+    genre = moviegenre.split(", ")
+    if "Animation" in genre:
+        for i in movies:
+            if "Animation" in i.genre.split(", "):
+                related_movies.append(i)
+    else:
+        for i in movies:
+            if "Animation" not in i.genre.split(", "):
                 if set(genre) & set(i.genre.split(", ")):
                     related_movies.append(i)
     return related_movies

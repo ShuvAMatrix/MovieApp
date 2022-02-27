@@ -1,0 +1,68 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+/* .dropdown:hover .dropdown-menu{
+    display: block;
+} */
+.columns{
+    float: left;
+    position: relative;
+    width: 250px;
+    /* margin-right: 20px; */
+}
+.columns.one-col {
+    column-count: 2;
+    overflow-y: auto;
+}
+.columns.two-col {
+    column-count: 2;
+    height: auto;
+    overflow-y: auto;
+}
+#aboutUsModal{
+    background-color: transparent;
+}
+.searchLink:hover{
+    color:springgreen;
+}
+/*
+.columns.three-col {
+    column-count: 3;
+    overflow: auto;
+    column-fill: auto;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    column-gap: 20px; 
+}
+.columns.four-col {
+    column-count: 4;
+    overflow: hidden;
+    
+} */
+/* .dropdown-menu{
+    width: 20vw;
+    overflow-y: auto;
+}
+.columns.two-col {
+    height: auto;
+    overflow-y: auto;
+    
+}
+.dropdown-menu li {
+    line-height: 1.5em;
+    float: left;
+    display: inline;           
+}
+#dropdown li {
+    width: 50%;
+} */
+#imdbURL.loading {
+    background: url('../../../static/img/loading_sm.gif') no-repeat 99% center;
+}
+#littleSearch.loading {
+    background: url('../../../static/img/loading_sm.gif') no-repeat 97.3% center;
+}
+.thumb_movie:hover{
+    background-color: rgb(0, 255, 128);
+    border:  green;
+}

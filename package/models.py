@@ -37,10 +37,14 @@ class Movie(db.Model, UserMixin):
 
 class MovieRequest(db.Model, UserMixin):
     id = db.Column(db.String(100), unique=True, primary_key = True)
-    imdb_id = db.Column(db.String(100), unique=True, nullable=False)
+    imdb_URL = db.Column(db.String(100), unique=True, nullable=False)
+    posterLink = db.Column(db.String(100), unique=True, nullable=False)
+    requestor = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable = False)
     original_name = db.Column(db.String(100), nullable = True)
     release_year = db.Column(db.String(100), nullable = False)
+    isfulfilled = db.Column(db.Boolean, nullable=False, default=False)
+    status = db.Column(db.String(100), default="Requested")
 
     def __repr__(self):
         return '<MovieRequest {0} {1}>'.format(self.id, self.imdb_id)
@@ -55,3 +59,12 @@ class SavedMovies(db.Model, UserMixin):
 
     def __repr__(self):
         return '<MovieRequest {0} {1}>'.format(self.id, self.imdb_id)
+
+
+
+class SavedQueries(db.Model, UserMixin):
+    keyword = db.Column(db.String(100), unique=True, primary_key = True)
+    data = db.Column(db.Text, nullable=False)
+    
+    def __repr__(self):
+        return '<MovieRequest {0} {1}>'.format(self.id, self.keyword)

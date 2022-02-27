@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
+<div class="mt-4"></div>
     {% if moviesLists|length > 0 %}
         {% for moviesList in moviesLists %}
             <div class="row mt-4 mb-3">
@@ -206,10 +207,10 @@
                                 "
                             >
                                 <div style="margin-top: 20%; margin-bottom: 20%;" class="text-center justify-content-center">
-                                    <div  class="mt-5 text-success">
+                                    <div  class="mt-3 text-success">
                                         <i class="fa fa-star fa-3x"></i>
                                     </div>
-                                    <div style="margin-top: 20%; margin-bottom: 20%;" class="text-white h4 mt-3 mb-5">{{movie.imdb_rating}}/10</div>
+                                    <div style="margin-top: 20%; margin-bottom: 20%;" class="text-white h4 mt-2 mb-5">{{movie.imdb_rating}}/10</div>
                                     <div>
                                         {% for genre in movie.genre.split(", ") %}
                                             <div class="text-white h5">
@@ -218,10 +219,10 @@
                                         {% endfor %}
                                     </div>
                                     <div style="margin-top: 20%; margin-bottom: 20%;" class="my-5">
-                                        <button class="btn btn-success btn-rounded waves-effect mr-1" onclick="location.href='/details/{{movie.id}}'">
+                                        <button class="btn btn-success btn-sm btn-rounded waves-effect mr-1" onclick="location.href='/details/{{movie.id}}'">
                                             Details
                                         </button>
-                                        <button type="button" class="btn btn-success btn-rounded waves-effect ml-1" data-toggle="modal" 
+                                        <button type="button" class="btn btn-success btn-sm btn-rounded waves-effect ml-1" data-toggle="modal" 
                                             data-target="#modal_{{movie.id}}">
                                             Watch
                                         </button>
@@ -237,6 +238,6 @@
             </div>
         {% endfor %}              
     {% else %}
-        Noting here!!
+        <div class="my-5 h1 text-center">Opps! Noting Here.</div>
     {% endif %}
 {% endblock body %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block extracss %}
+    <style>
+        .urlhover{
+            color:white;
+        }
+        .urlhover:hover{
+            color:springgreen;
+        }
+    </style>
+{% endblock extracss %}
+{% block body %}
+<div class="h3 text-white text-center mt-4 mb-5">
+    Unfulfilled Requests
+</div>
+<table class="text-white text-center table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Release Year</th>
+        <th scope="col">IMDB URL</th>
+        <th scope="col">Requestor</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for movie in unFulfilled %}
+            <tr>
+                <th scope="row">{{movie.id}}</th>
+                <td>
+                    <a href="/moviedetails/{{movie.id}}" class="urlhover text-decoration-none">{{movie.name}}</a>
+                </td>
+                <td>{{movie.release_year}}</td>
+                <td>
+                    <a target="_blank" class="urlhover text-decoration-none" href={{movie.imdb_URL}}>
+                        {{movie.imdb_URL}}
+                    </a>
+                </td>
+                <td>{{movie.requestor}}</td>
+                <td>
+                <button type="button" onclick="
+                    Swal.fire({
+                        title: 'Processing...',
+                        imageUrl: '../../../static/img/spinner.gif',
+                        timer: 3000
+                    })
+                    location.href='/acceptrequest/{{movie.id}}'" class="btn btn-success btn-sm px-3">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button type="button" onclick="
+                    Swal.fire({
+                        title: 'Processing...',
+                        imageUrl: '../../../static/img/spinner.gif',
+                        timer: 3000
+                    })
+                    location.href='/denyrequest/{{movie.id}}'" 
+                    class="btn btn-danger btn-sm px-3">
+                    <i class="fas fa-times"></i>
+                </button>
+                </td>
+            </tr>
+        {% endfor %}
+      
+    </tbody>
+  </table>
+  <hr class="my-5">
+    <div class="h3 text-white text-center mt-4 mb-5">
+        Fulfilled Requests
+    </div>
+    <table class="text-white table align-middle">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Release Year</th>
+            <th scope="col">IMDB URL</th>
+            <th scope="col">Requestor</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for movie in fulfilled %}
+                <tr>
+                    <th scope="row">{{movie.id}}</th>
+                    <td>
+                        <a href="/moviedetails/{{movie.id}}" class="urlhover text-decoration-none">{{movie.name}}</a>
+                    </td>
+                    <td>{{movie.release_year}}</td>
+                    <td>
+                        <a target="_blank" class="urlhover text-decoration-none" href={{movie.imdb_URL}}>
+                            {{movie.imdb_URL}}
+                        </a>
+                    </td>
+                    <td>{{movie.requestor}}</td>
+                    <td>
+                    {{movie.status}}
+                    </td>
+                </tr>
+            {% endfor %}
+          
+        </tbody>
+      </table>
+{% endblock body %}
