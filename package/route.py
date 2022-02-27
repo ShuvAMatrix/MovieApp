@@ -64,6 +64,11 @@ def add():
         movie_URL = request.form["movieURL"]
         imdb_URL = request.form["imdbURL"]
         id, original_name, posterLink, genre, release_year, is_adult, rating, imdb_id, movie_name, runtime, language = getAddMovieDetails(imdb_URL)
+        em = Movie.query.filter_by(id=id).first()
+        if em:
+            flash(f"Movie is already added!", "warning")
+            redirect_url = "/details/" + str(id)
+            return redirect(redirect_url)
         movie = Movie(id=id, imdb_id=imdb_id, name=movie_name, original_name=original_name, release_year=release_year, posterLink=posterLink,
                     directLink=movie_URL,genre=genre, imdb_rating=rating, is_adult=is_adult, runtime=runtime, language=language)
         db.session.add(movie)
