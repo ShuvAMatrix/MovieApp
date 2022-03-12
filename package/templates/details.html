@@ -295,7 +295,7 @@
                 {% endif %}
                 
             </div>
-            <div class="text-left row mt-5 mx-2">
+            <div class="text-left row mt-5 mx-2 my-5">
                 <div class="h3 text-white">Plot</div>
                 {% if omdb_info["Plot"] %}
                     <div class="h6 text-white">{{omdb_info["Plot"]}}</div>
@@ -308,7 +308,7 @@
         {% if related_movies|length > 0 %}
             <div class="d-none d-lg-block d-xl-block col-2">
                 <div class="h5 my-4 text-white ">Related Movies</div>
-                <div class="row row-cols-1 gy-5">
+                <div class="row row-cols-1 gy-2">
                     {% for rmovie in related_movies %}
                         <div class=" justify-content-center">
                             <a href="/details/{{rmovie.id}}">

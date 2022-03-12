@@ -51,7 +51,7 @@ def findIMDBid(name):
 
 def getAddMovieDetails(url):
     imdb_id = url.split("/title/")[1][:-1]
-    id, original_name, posterLink, genre, release_year, is_adult, rating, runtime, language = "","","","","","","","",""
+    id, original_name, posterLink, genre, release_year, is_adult, rating, runtime, language, movie_name = "","","","","","","","","", ""
     omdb_url = "https://www.omdbapi.com/?i=" + imdb_id + "&apikey=" + OMDB_API_KEY
     res = requests.get(omdb_url, headers=ua).json()
     try:

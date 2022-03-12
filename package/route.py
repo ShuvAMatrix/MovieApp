@@ -75,7 +75,8 @@ def add():
         db.session.add(movie)
         db.session.commit()
         flash(f"Movie has been saved!", "success")
-        return redirect("/")
+        redirect_url = "/details/" + id
+        return redirect(redirect_url)
 
 
 @app.route("/all", methods={"GET", "POST"})
@@ -209,7 +210,7 @@ def details(id):
         # from package.cutomClasses import tmdb_info, omdb_info
 
         #Without threading
-        related_movies = fetchSimilarMovies(movie)
+        related_movies = fetchSimilarMovies(movie)[:3]
         #With Threading
         # t1 = CustomThread(target=fetchAllDetails, args=(id, movie.imdb_id, ))
         # t2 = CustomThread(target=fetchSimilarMovies, args=(movie,))
@@ -370,6 +371,7 @@ def edit(id):
         return render_template("edit.html", user=current_user, value="hidden", movie=movie)
     if request.method == "POST":
         id = request.form["id"]
+        previous_id = request.form["previous_id"]
         imdb_id = request.form["imdb_id"]
         name = request.form["name"]
         original_name = request.form["original_name"]
@@ -383,32 +385,71 @@ def edit(id):
         is_adult = request.form["is_adult"]
         is_archived = request.form["is_archived"]
         watch_count = request.form["watch_count"]
-        movie = Movie.query.filter_by(id=id).first()
-        movie.id = id
-        movie.imdb_id = imdb_id
-        movie.name = name
-        movie.original_name = original_name
-        movie.release_year = release_year
-        movie.posterLink = posterLink
-        movie.directLink = directLink
-        movie.genre = genre
-        movie.language = language
-        movie.imdb_rating = imdb_rating
-        movie.runtime = runtime
+        if id==previous_id:
+            movie = Movie.query.filter_by(id=id).first()
+            movie.id = id
+            movie.imdb_id = imdb_id
+            movie.name = name
+            movie.original_name = original_name
+            movie.release_year = release_year
+            movie.posterLink = posterLink
+            movie.directLink = directLink
+            movie.genre = genre
+            movie.language = language
+            movie.imdb_rating = imdb_rating
+            movie.runtime = runtime
 
-        if is_adult.casefold() == "False".casefold():
-            movie.is_adult = False
-        elif is_adult.casefold() == "True".casefold():
-            movie.is_adult = True
-        
-        if is_archived.casefold() == "False".casefold():
-            movie.is_archived = False
-        elif is_archived.casefold() == "True".casefold():
-            movie.is_archived = True
-        
-        movie.watch_count = watch_count
-        db.session.add(movie)
-        db.session.commit()
+            if is_adult.casefold() == "False".casefold():
+                movie.is_adult = False
+            elif is_adult.casefold() == "True".casefold():
+                movie.is_adult = True
+            
+            if is_archived.casefold() == "False".casefold():
+                movie.is_archived = False
+            elif is_archived.casefold() == "True".casefold():
+                movie.is_archived = True
+            
+            movie.watch_count = watch_count
+            db.session.add(movie)
+            db.session.commit()
+        else:
+            old_movie = Movie.query.filter_by(id=previous_id).first()
+            if is_adult.casefold() == "False".casefold():
+                is_adult = False
+            elif is_adult.casefold() == "True".casefold():
+                is_adult = True
+            
+            if is_archived.casefold() == "False".casefold():
+                is_archived = False
+            elif is_archived.casefold() == "True".casefold():
+                is_archived = True
+            new_movie = Movie(id=id, imdb_id=imdb_id, name=name, original_name=original_name, release_year=release_year, posterLink=posterLink,
+                    directLink=directLink,genre=genre, imdb_rating=imdb_rating, is_adult=is_adult, runtime=runtime, language=language)
+            db.session.delete(old_movie)
+            db.session.commit()
+            db.session.add(new_movie)
+            db.session.commit()
         flash(f"Movie has been updated!", "success")
         redirect_url = "/details/"+id
         return redirect(redirect_url)
+
+
+@app.route("/refresh/<imdb_id>", methods={"GET", "POST"})
+@login_required
+def refresh(imdb_id):
+    if request.method == "GET":
+        imdb_URL = imdb_title_prefix + imdb_id + "/"
+        id, original_name, posterLink, genre, release_year, is_adult, rating, imdb_id, movie_name, runtime, language = getAddMovieDetails(imdb_URL)
+        d = {}
+        d["id"] = id
+        d["original_name"] = original_name
+        d["posterLink"] = posterLink
+        d["genre"] = genre
+        d["release_year"] = release_year
+        d["is_adult"] = is_adult
+        d["rating"] = rating
+        d["imdb_id"] = imdb_id
+        d["movie_name"] = movie_name
+        d["runtime"] = runtime
+        d["language"] = language
+        return d

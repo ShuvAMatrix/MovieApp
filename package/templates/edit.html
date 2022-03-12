@@ -8,16 +8,17 @@
   </div>
 
   <form method="POST" action="">
+    <input type="hidden" id="previous_id" value="{{movie.id}}" name="previous_id">
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" name="name" value="{{movie.name}}" class="form-control text-white" />
+          <input type="text" id="movie_name" name="name" value="{{movie.name}}" class="form-control text-white" />
           <label class="form-label text-white" for="form6Example1">Movie Name</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="original_name" value="{{movie.original_name}}"
+          <input type="text" id="original_name" name="original_name" value="{{movie.original_name}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Original Name</label>
         </div>
@@ -27,14 +28,14 @@
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" name="posterLink" value="{{movie.posterLink}}"
+          <input type="text" id="posterLink" name="posterLink" value="{{movie.posterLink}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example1">Poster Link</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="genre" value="{{movie.genre}}" class="form-control text-white" />
+          <input type="text" id="genre" name="genre" value="{{movie.genre}}" class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Genre</label>
         </div>
       </div>
@@ -43,20 +44,20 @@
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" name="id" value="{{movie.id}}" class="form-control text-white" />
+          <input type="text" id="id" name="id" value="{{movie.id}}" class="form-control text-white" />
           <label class="form-label text-white" for="form6Example1">ID</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="imdb_id" value="{{movie.imdb_id}}"
+          <input type="text" id="imdb_id" name="imdb_id" value="{{movie.imdb_id}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">IMDB ID</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="number" id="form6Example2" name="year" value="{{movie.release_year}}"
+          <input type="number" id="release_year" name="year" value="{{movie.release_year}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Release Year</label>
         </div>
@@ -67,21 +68,21 @@
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" name="rating" value="{{movie.imdb_rating}}"
+          <input type="text" id="rating" name="rating" value="{{movie.imdb_rating}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example1">IMDB Rating</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="runtime" value="{{movie.runtime}}"
+          <input type="text" id="runtime" name="runtime" value="{{movie.runtime}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Runtime</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="language" value="{{movie.language}}"
+          <input type="text" id="language" name="language" value="{{movie.language}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Language</label>
         </div>
@@ -91,21 +92,21 @@
     <div class="row mb-4">
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example1" name="is_adult" value="{{movie.is_adult}}"
+          <input type="text" id="is_adult" name="is_adult" value="{{movie.is_adult}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example1">Is Adult</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="text" id="form6Example2" name="is_archived" value="{{movie.is_archived}}"
+          <input type="text" id="is_archived" name="is_archived" value="{{movie.is_archived}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Is Archived</label>
         </div>
       </div>
       <div class="col">
         <div class="form-outline">
-          <input type="number" id="form6Example2" name="watch_count" value="{{movie.watch_count}}"
+          <input type="number" id="watch_count" name="watch_count" value="{{movie.watch_count}}"
             class="form-control text-white" />
           <label class="form-label text-white" for="form6Example2">Watch Count</label>
         </div>
@@ -113,17 +114,79 @@
     </div>
 
     <div class="form-outline mb-4">
-      <input type="text" id="form6Example4" name="directLink" value="{{movie.directLink}}"
+      <input type="text" id="directLink" name="directLink" value="{{movie.directLink}}"
         class="form-control text-white" />
       <label class="form-label text-white" for="form6Example4">Direct Link</label>
     </div>
 
     <div class="row justify-content-center">
-      <div class="col-4 mt-4">
+      <div class="col-2 mt-4">
         <button type="submit" class="btn btn-outline-success btn-rounded btn-block mb-4">Save</button>
+      </div>
+      <div class="col-2 mt-4">
+        <a class="btn btn-outline-success btn-rounded btn-block mb-4" id="refreshbtn" onclick="refresh()">Refresh</a>
       </div>
     </div>
   </form>
 </div>
 
+<script>
+  var initial_imdb_id = ""
+  function my_function() {
+    initial_imdb_id = document.getElementById("imdb_id").value
+  }
+  if (window.attachEvent) {
+    window.attachEvent('onload', my_function);
+  }
+  else if (window.addEventListener) {
+    window.addEventListener('load', my_function, false);
+  }
+  else {
+    document.addEventListener('load', my_function, false);
+  }
+  function refresh(){
+    current_imdb_id = document.getElementById("imdb_id").value
+    current_id = document.getElementById("id").value
+    if (current_imdb_id != initial_imdb_id){
+      $("#refreshbtn").text("")
+      $("#refreshbtn").append('<div class="spinner-border spinner-border-sm text-success" role="status"><span class="visually-hidden">Loading...</span></div>')
+      $("#refreshbtn").removeAttr("onClick")
+      var url = '/refresh/' + current_imdb_id
+        try{
+            $.get(url, function(response) {
+              var genre = response["genre"]
+              var id = response["id"]
+              var imdb_id = response["imdb_id"]
+              var is_adult = response["is_adult"]
+              var language = response["language"]
+              var movie_name = response["movie_name"]
+              var original_name = response["original_name"]
+              var posterLink = response["posterLink"]
+              var rating = response["rating"]
+              var release_year = response["release_year"]
+              var runtime = response["runtime"]
+              document.getElementById("genre").value = genre
+              document.getElementById("id").value = id
+              document.getElementById("imdb_id").value = imdb_id
+              document.getElementById("is_adult").value = is_adult
+              document.getElementById("language").value = language
+              document.getElementById("movie_name").value = movie_name
+              document.getElementById("original_name").value = original_name
+              document.getElementById("posterLink").value = posterLink
+              document.getElementById("rating").value = rating
+              document.getElementById("release_year").value = release_year
+              document.getElementById("runtime").value = runtime
+              initial_imdb_id = current_imdb_id
+              $("#refreshbtn").html('Refresh')
+              $("#refreshbtn").attr("onClick","refresh()")
+            });
+        }
+        catch{
+            alert("Server Error!")
+        }
+    }
+  }
+
+
+</script>
 {% endblock body %}
