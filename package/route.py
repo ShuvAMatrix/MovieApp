@@ -121,7 +121,7 @@ def archive(id):
         db.session.add(movie)
         db.session.commit()
         flash(f"Movie has been archived!", "success")
-        return redirect("/")
+        return redirect("/all")
 
 
 @app.route("/bin", methods={"GET", "POST"})
