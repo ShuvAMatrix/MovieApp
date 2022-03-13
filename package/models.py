@@ -54,8 +54,8 @@ class SavedMovies(db.Model, UserMixin):
     id = db.Column(db.String(100), unique=True, primary_key = True)
     imdb_id = db.Column(db.String(100), unique=True, nullable=False)
     keywords = db.Column(db.String(100), nullable=False)
-    tmdb_data = db.Column(db.Text, unique=True, nullable=False)
-    omdb_data = db.Column(db.Text, unique=True, nullable=False)
+    tmdb_data = db.Column(db.Text, nullable=False)
+    omdb_data = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return '<MovieRequest {0} {1}>'.format(self.id, self.imdb_id)
