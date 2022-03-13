@@ -9,13 +9,13 @@ load_dotenv(find_dotenv())
 app = Flask(__name__)
 
 #Normal config
-# uri = os.environ.get('DATABASE_URL')
-# if uri and uri.startswith("postgres://"):
-#     uri = uri.replace("postgres://", "postgresql://", 1)
-# app.config['SQLALCHEMY_DATABASE_URI'] = uri
+uri = os.environ.get('DATABASE_URL')
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
 #For connecting postgres
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 
 #For local database upgrade
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///tasks.db"
