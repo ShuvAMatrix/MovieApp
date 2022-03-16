@@ -1,3 +1,5 @@
+from pkgutil import ModuleInfo
+from shutil import move
 from flask import Flask, request, redirect, flash
 from flask import render_template
 import json
@@ -12,6 +14,9 @@ import time
 #initialize list
 genreDict = getGenre()
 
+
+#Movie per page
+movie_per_page = 16
 
 @app.route("/login", methods={"GET", "POST"})
 def login():
@@ -84,10 +89,24 @@ def add():
 def all():
     tile_per_row = 4
     results = Movie.query.filter_by(is_archived=False).all()
+    total_pages = len(results) // movie_per_page + 1
     moviesLists = []
-    for i in range(0, len(results), tile_per_row):
+    for i in range(0, movie_per_page, tile_per_row):
         moviesLists.append(results[i:i+tile_per_row]) 
-    return render_template("view.html", moviesLists=moviesLists, user=current_user, all="active")
+    return render_template("view.html", total_pages=total_pages, moviesLists=moviesLists, user=current_user, all="active", type="all")
+
+
+@app.route("/all/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def all_paginated(page_no):
+    tile_per_row = 4
+    page_no = int(page_no) - 1
+    results = Movie.query.filter_by(is_archived=False).all()
+    moviesLists = []
+    total_pages = len(results) // movie_per_page + 1
+    for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
+        moviesLists.append(results[i:i+tile_per_row]) 
+    return render_template("view.html", total_pages=total_pages, moviesLists=moviesLists, user=current_user, all="active", type="all")
 
 
 @app.route("/category/<cat>", methods={"GET", "POST"})
@@ -105,11 +124,35 @@ def category(cat):
         for i in allMovies:
             if cat in i.genre.split(", "):
                 temp.append(i)
-    for j in range(0, len(temp), tile_per_row):
+    total_pages = len(temp) // movie_per_page + 1
+    for j in range(0, movie_per_page, tile_per_row):
         movieLists.append(temp[j:j+tile_per_row])
-
     temp = cat
-    return render_template("view.html", moviesLists=movieLists, user=current_user, cat=cat, active=cat, category="active")
+    return render_template("view.html", moviesLists=movieLists, type="category", total_pages=total_pages, user=current_user, cat=cat, active=cat, category="active")
+
+
+
+@app.route("/category/<cat>/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def categoryPage(cat, page_no):
+    tile_per_row = 4
+    page_no = int(page_no) - 1
+    allMovies = Movie.query.filter_by(is_archived=False).all()
+    temp = []
+    movieLists = []
+    if cat == "Science Fiction":
+        for i in allMovies:
+            if cat in i.genre.split(", ") or "Sci-Fi" in i.genre.split(", "):
+                temp.append(i)
+    else:
+        for i in allMovies:
+            if cat in i.genre.split(", "):
+                temp.append(i)
+    total_pages = len(temp) // movie_per_page + 1
+    for j in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
+        movieLists.append(temp[j:j+tile_per_row])
+    temp = cat
+    return render_template("view.html",total_pages=total_pages, type="category", moviesLists=movieLists, user=current_user, cat=cat, active=cat, category="active")
 
 
 @app.route("/archive/<id>", methods={"GET", "POST"})
@@ -130,10 +173,24 @@ def bin():
     if request.method == "GET":
         tile_per_row = 4
         results = Movie.query.filter_by(is_archived=True).all()
+        total_pages = len(results) // movie_per_page + 1
         moviesLists = []
-        for i in range(0, len(results), tile_per_row):
+        for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user, bin="active")
+        return render_template("view.html", type="bin", total_pages=total_pages, moviesLists=moviesLists, user=current_user, bin="active")
+
+@app.route("/bin/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def bin_paged(page_no):
+    if request.method == "GET":
+        tile_per_row = 4
+        results = Movie.query.filter_by(is_archived=True).all()
+        total_pages = len(results) // movie_per_page + 1
+        page_no = int(page_no) - 1
+        moviesLists = []
+        for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
+            moviesLists.append(results[i:i+tile_per_row]) 
+        return render_template("view.html", type="bin", total_pages=total_pages, moviesLists=moviesLists, user=current_user, bin="active")
 
 
 @app.route("/delete/<id>", methods={"GET", "POST"})
@@ -155,9 +212,25 @@ def new():
     moviesLists = []
     if request.method == "GET":
         results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
-        for i in range(0, len(results), tile_per_row):
+        total_pages = len(results) // movie_per_page + 1
+        for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user, new="active")
+        return render_template("view.html", type="new", total_pages=total_pages, moviesLists=moviesLists, user=current_user, new="active")
+
+
+
+@app.route("/new/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def new_paginated(page_no):
+    tile_per_row = 4
+    moviesLists = []
+    page_no = int(page_no) - 1
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
+        total_pages = len(results) // movie_per_page + 1
+        for i in range(page_no*movie_per_page, page_no*movie_per_page+movie_per_page, tile_per_row):
+            moviesLists.append(results[i:i+tile_per_row]) 
+        return render_template("view.html", type="new", total_pages=total_pages, moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -169,9 +242,25 @@ def popular():
     if request.method == "GET":
         results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
         results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
-        for i in range(0, len(results), tile_per_row):
+        total_pages = len(results) // movie_per_page + 1
+        for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user, popular="active")
+        return render_template("view.html", type="popular", total_pages=total_pages, moviesLists=moviesLists, user=current_user, popular="active")
+
+
+@app.route("/popular/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def popular_paginated(page_no):
+    tile_per_row = 4
+    moviesLists = []
+    page_no = int(page_no) - 1
+    if request.method == "GET":
+        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        total_pages = len(results) // movie_per_page + 1
+        for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
+            moviesLists.append(results[i:i+tile_per_row]) 
+        return render_template("view.html", type="popular", moviesLists=moviesLists, total_pages=total_pages, user=current_user, popular="active")
 
 
 
@@ -233,9 +322,31 @@ def language(lang):
         for i in results:
             if lang.casefold() in i.language.casefold():
                 langMovies.append(i)
-        for i in range(0, len(langMovies), tile_per_row):
+        total_pages = len(langMovies) // movie_per_page + 1
+        for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, user=current_user, active=lang, language="active")
+        return render_template("view.html", moviesLists=moviesLists, type="language", total_pages=total_pages, user=current_user, active=lang, language="active")
+
+
+
+@app.route("/language/<lang>/page/<page_no>", methods={"GET", "POST"})
+@login_required
+def language_paginated(lang, page_no):
+    tile_per_row = 4
+    moviesLists = []
+    langMovies = []
+    page_no = int(page_no) - 1
+    lang1=lang
+    d = {"bengali":"active", "english":"active"}
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        for i in results:
+            if lang.casefold() in i.language.casefold():
+                langMovies.append(i)
+        total_pages = len(langMovies) // movie_per_page + 1
+        for i in range(page_no*movie_per_page, movie_per_page*page_no + movie_per_page, tile_per_row):
+            moviesLists.append(langMovies[i:i+tile_per_row]) 
+        return render_template("view.html", total_pages=total_pages, type="language", lang1=lang1, moviesLists=moviesLists, user=current_user, active=lang, language="active")
 
 
 @app.route("/apisearch/<query>", methods={"GET", "POST"})

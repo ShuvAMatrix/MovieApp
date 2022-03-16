@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{% block extracss %}
+    <style>
+        .page-item .page-link a{
+            color: black;
+        }
+    </style>
+{% endblock extracss %}
 {% block body %}
 <div class="mt-4"></div>
     {% if moviesLists|length > 0 %}
@@ -242,8 +249,95 @@
                     </div>
                 {% endfor %}
             </div>
-        {% endfor %}              
+        {% endfor %}
+        <div>
+            <nav aria-label="...">
+                <ul class="pagination pagination-md justify-content-center">
+                  {% if type=="category" %}
+                    <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/category/{{cat}}">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                      
+                  {% if type=="all" %}
+                    <li class="page-item {{all}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/all">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/all/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                  {% if type=="bin" %}
+                    <li class="page-item {{bin}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/bin">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/bin/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                  {% if type=="language" %}
+                    <li class="page-item {{language}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/language/{{lang_1}}">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/language/{{lang1}}/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                  {% if type=="popular" %}
+                    <li class="page-item {{popular}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/popular">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/popular/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                  {% if type=="new" %}
+                    <li class="page-item {{new}}" id="firstpage" aria-current="page">
+                        <a class="page-link text-white" href="/new">
+                        1
+                        <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                    {% for i in range(1,total_pages) %}
+                        <li class="page-item" id="page_{{i+1}}"><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
+                    {% endfor %}
+                  {% endif %}
+                </ul>
+              </nav>
+        </div>              
     {% else %}
         <div class="my-5 h1 text-center">Opps! Noting Here.</div>
     {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var pathname = window.location.pathname
+            if(pathname.includes("page") ){
+                page_no = pathname.split("/").pop()
+                id = "page_" + String(page_no)
+                removeElement = document.getElementById("firstpage")
+                removeElement.classList.remove("active");
+                element = document.getElementById(id)
+                element.classList.add("active");
+            }
+        }, false);
+    </script>
 {% endblock body %}
