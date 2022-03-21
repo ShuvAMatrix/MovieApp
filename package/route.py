@@ -6,7 +6,7 @@ import json
 from package.main import findIMDBid, getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies, apisearch, getOMDBRes, getTMDBRes, fetchSavedSimilarMovies
 from flask_login import login_user, current_user, logout_user, login_required
 from package import app, db, imdb_image_prefix, imdb_title_prefix
-from package.models import Movie, SavedMovies, User, SavedQueries, MovieRequest
+from package.models import Movie, SavedMovies, SavedSeries, User, SavedQueries, MovieRequest, Series
 from package.cutomClasses import CustomThread
 import threading
 import time
@@ -347,6 +347,46 @@ def language_paginated(lang, page_no):
         for i in range(page_no*movie_per_page, movie_per_page*page_no + movie_per_page, tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
         return render_template("view.html", total_pages=total_pages, type="language", lang1=lang1, moviesLists=moviesLists, user=current_user, active=lang, language="active")
+
+
+
+@app.route("/series", methods={"GET", "POST"})
+@login_required
+def series():
+    tile_per_row = 4
+    moviesLists = []
+    langMovies = []
+    if request.method == "GET":
+        results = Series.query.filter_by(is_archived=False).order_by(Series.name.asc()).all()
+        for i in results:
+            langMovies.append(i)
+        total_pages = len(langMovies) // movie_per_page + 1
+        for i in range(0, movie_per_page, tile_per_row):
+            moviesLists.append(langMovies[i:i+tile_per_row]) 
+        return render_template("view.html", moviesLists=moviesLists, type="series", total_pages=total_pages, user=current_user, active="series", series="active")
+
+
+
+@app.route("/seriesdetails/<id>", methods={"GET", "POST"})
+@login_required
+def seriesdetails(id):
+    movie = Series.query.filter_by(id=id).first()
+    tmdb_info = {}
+    omdb_info = {}
+    related_movies = []
+    if request.method == "GET":
+        saved_movie = SavedSeries.query.filter_by(id=id).first()
+        if not saved_movie:
+            tmdb_info, omdb_info = fetchAllDetails(id, movie.imdb_id)
+            save_movie = SavedMovies(id=id, imdb_id=movie.imdb_id, keywords=movie.name, tmdb_data=json.dumps(tmdb_info), omdb_data=json.dumps(omdb_info))
+            db.session.add(save_movie)
+            db.session.commit()
+        else:
+            tmdb_info = json.loads(saved_movie.tmdb_data)
+            omdb_info = json.loads(saved_movie.omdb_data)
+        related_movies = fetchSimilarMovies(movie)[:3]
+        return render_template("seriesdetails.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
+
 
 
 @app.route("/apisearch/<query>", methods={"GET", "POST"})

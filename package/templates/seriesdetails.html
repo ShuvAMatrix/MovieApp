@@ -43,14 +43,7 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                            var s = '{{movie.directLink}}'
-                            var file_id = s.split('/files/')[1].split('?')[0]
-                            var file_url = 'https\://drive.google.com/file/d/' + file_id + '/view?usp=sharing'
-                            // location.href=file_url
-                            let a= document.createElement('a');
-                            a.target= '_blank';
-                            a.href= file_url;
-                            a.click();
+                            location.href='{{ movie.directLink }}'
                             ">
                         <i class="d-none fa fa-download mr-2"></i>
                         Download</button>
@@ -92,6 +85,7 @@
                                 <button name="save" id="copyurl" value=""
                                     class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
                                     var copyText ='{{ movie.directLink }}'
+                                    console.log(copyText)
                                     var dummy = document.createElement('textarea');
                                     document.body.appendChild(dummy);
                                     dummy.value = copyText;
@@ -106,27 +100,6 @@
                                         confirmButtonText: 'Okay',
                                         timer: 2000
                                     })">Copy</button>
-                                    <button name="save" id="copyurl" value=""
-                                    class="btn btn-outline-primary btn-rounded btn-md ml-4" 
-                                    onclick="
-                                    var s = '{{ movie.directLink }}'
-                                    var name = 'AIzaSyD5rW7Rg1mCWTzmJBdiQDgBQv79uufK9Tg'
-                                    var copyText = s.split('key=')[0] + 'key=' + name
-                                    var dummy = document.createElement('textarea');
-                                    document.body.appendChild(dummy);
-                                    dummy.value = copyText;
-                                    dummy.select();
-                                    dummy.setSelectionRange(0, 99999);
-                                    navigator.clipboard.writeText(dummy.value);
-                                    document.body.removeChild(dummy);
-                                    Swal.fire({
-                                        title: 'Copied to Clipboard!',
-                                        icon: 'success',
-                                        timerProgressBar: true,
-                                        confirmButtonText: 'Okay',
-                                        timer: 2000
-                                    })"
-                                >Copy 2</button>
                                 <button name="save" id="btn-ok" value=""
                                     class="btn btn-outline-primary btn-rounded btn-md ml-4" onclick="
                                     Swal.fire({
