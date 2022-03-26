@@ -8,12 +8,15 @@ import json
 from googlesearch import search
 import imdb
 from requests.utils import quote
-
+from difflib import SequenceMatcher
 from package.models import Movie
 
 ia = imdb.IMDb()
 ua = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"}
 
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 
 def getGenre():
     response = {"genres":[{"id":28,"name":"Action"},{"id":12,"name":"Adventure"},{"id":16,"name":"Animation"},{"id":35,"name":"Comedy"},{"id":80,"name":"Crime"},{"id":99,"name":"Documentary"},{"id":18,"name":"Drama"},{"id":10751,"name":"Family"},{"id":14,"name":"Fantasy"},{"id":36,"name":"History"},{"id":27,"name":"Horror"},{"id":10402,"name":"Music"},{"id":9648,"name":"Mystery"},{"id":10749,"name":"Romance"},{"id":878,"name":"Science Fiction"},{"id":10770,"name":"TV Movie"},{"id":53,"name":"Thriller"},{"id":10752,"name":"War"},{"id":37,"name":"Western"}]}
@@ -136,16 +139,23 @@ def fetchSimilarMovies(movie):
     related_movies = []
     movies = Movie.query.filter_by(is_archived=False).all()
     genre = movie.genre.split(", ")
+    movie_match = {}
     if "Animation" in genre:
-        for i in movies:
-            if movie.id != i.id and "Animation" in i.genre.split(", "):
-                related_movies.append(i)
+        if "Japanese" in movie.language.split(", "):
+            for i in movies:
+                if movie.id != i.id and "Animation" in i.genre.split(", ") and "Japanese" in i.language:
+                    movie_match[i] = similar(i.name, movie.name)
+        else:
+            for i in movies:
+                if movie.id != i.id and "Animation" in i.genre.split(", "):
+                    movie_match[i] = similar(i.name, movie.name)
     else:
         for i in movies:
             if movie.id != i.id and "Animation" not in i.genre.split(", "):
                 if set(genre) & set(i.genre.split(", ")):
-                    related_movies.append(i)
-    return related_movies
+                    movie_match[i] = similar(i.name, movie.name)
+    sorted_dict = dict(sorted(movie_match.items(), key=lambda item: item[1], reverse=True))
+    return list(sorted_dict.keys())
 
 
 def apisearch(query):

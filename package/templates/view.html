@@ -280,73 +280,272 @@
         <div>
             <nav aria-label="...">
                 <ul class="pagination pagination-md justify-content-center">
-                  {% if type=="category" %}
-                    <li class="page-item {{category}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/category/{{cat}}">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
-                      
-                  {% if type=="all" %}
-                    <li class="page-item {{all}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/all">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/all/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
-                  {% if type=="bin" %}
-                    <li class="page-item {{bin}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/bin">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/bin/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
-                  {% if type=="language" %}
-                    <li class="page-item {{language}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/language/{{lang_1}}">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/language/{{lang1}}/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
-                  {% if type=="popular" %}
-                    <li class="page-item {{popular}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/popular">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/popular/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
-                  {% if type=="new" %}
-                    <li class="page-item {{new}}" id="firstpage" aria-current="page">
-                        <a class="page-link text-white" href="/new">
-                        1
-                        <span class="visually-hidden">(current)</span>
-                        </a>
-                    </li>
-                    {% for i in range(1,total_pages) %}
-                        <li class="page-item" id="page_{{i+1}}"><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
-                    {% endfor %}
-                  {% endif %}
+                    {% if total_pages > 9 %}
+                        {% if type=="category" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/category/{{cat}}">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/category/{{cat}}">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+
+                        {% if type=="all" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/all">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/all/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/all">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/all/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/all/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+                        
+
+                        {% if type=="bin" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/bin">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/bin/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/bin">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/bin/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/bin/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+
+                        {% if type=="language" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/language/{{lang}}">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/language/{{lang}}/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/language/{{lang}}">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/language/{{lang}}/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/language/{{lang}}/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+                        
+                        {% if type=="popular" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/popular">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/popular/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/popular">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/popular/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/popular/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+                        
+                        {% if type=="new" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/new">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/new">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/new/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
+
+                    {% else %}
+                    
+                        {% if type=="category" %}
+                            <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/category/{{cat}}">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/category/{{cat}}/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if type=="all" %}
+                            <li class="page-item {{all}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/all">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/all/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if type=="bin" %}
+                            <li class="page-item {{bin}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/bin">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/bin/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if type=="language" %}
+                            <li class="page-item {{language}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/language/{{lang}}">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/language/{{lang}}/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if type=="popular" %}
+                            <li class="page-item {{popular}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/popular">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/popular/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        {% if type=="new" %}
+                            <li class="page-item {{new}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/new">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}"><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        
+                    {% endif %}
+                  
                 </ul>
               </nav>
         </div>              

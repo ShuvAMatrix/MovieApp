@@ -93,7 +93,7 @@ def all():
     moviesLists = []
     for i in range(0, movie_per_page, tile_per_row):
         moviesLists.append(results[i:i+tile_per_row]) 
-    return render_template("view.html", total_pages=total_pages, moviesLists=moviesLists, user=current_user, all="active", type="all")
+    return render_template("view.html", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, all="active", type="all")
 
 
 @app.route("/all/page/<page_no>", methods={"GET", "POST"})
@@ -104,9 +104,10 @@ def all_paginated(page_no):
     results = Movie.query.filter_by(is_archived=False).all()
     moviesLists = []
     total_pages = len(results) // movie_per_page + 1
+    print(total_pages)
     for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
         moviesLists.append(results[i:i+tile_per_row]) 
-    return render_template("view.html", total_pages=total_pages, moviesLists=moviesLists, user=current_user, all="active", type="all")
+    return render_template("view.html", total_pages=total_pages, curr_page=page_no, moviesLists=moviesLists, user=current_user, all="active", type="all")
 
 
 @app.route("/category/<cat>", methods={"GET", "POST"})
@@ -128,7 +129,7 @@ def category(cat):
     for j in range(0, movie_per_page, tile_per_row):
         movieLists.append(temp[j:j+tile_per_row])
     temp = cat
-    return render_template("view.html", moviesLists=movieLists, type="category", total_pages=total_pages, user=current_user, cat=cat, active=cat, category="active")
+    return render_template("view.html", moviesLists=movieLists, type="category", curr_page=1, total_pages=total_pages, user=current_user, cat=cat, active=cat, category="active")
 
 
 
@@ -152,7 +153,7 @@ def categoryPage(cat, page_no):
     for j in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
         movieLists.append(temp[j:j+tile_per_row])
     temp = cat
-    return render_template("view.html",total_pages=total_pages, type="category", moviesLists=movieLists, user=current_user, cat=cat, active=cat, category="active")
+    return render_template("view.html",total_pages=total_pages, type="category", curr_page=page_no, moviesLists=movieLists, user=current_user, cat=cat, active=cat, category="active")
 
 
 @app.route("/archive/<id>", methods={"GET", "POST"})
@@ -177,7 +178,7 @@ def bin():
         moviesLists = []
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="bin", total_pages=total_pages, moviesLists=moviesLists, user=current_user, bin="active")
+        return render_template("view.html", type="bin", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, bin="active")
 
 @app.route("/bin/page/<page_no>", methods={"GET", "POST"})
 @login_required
@@ -190,7 +191,7 @@ def bin_paged(page_no):
         moviesLists = []
         for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="bin", total_pages=total_pages, moviesLists=moviesLists, user=current_user, bin="active")
+        return render_template("view.html", type="bin", total_pages=total_pages, curr_page=page_no, moviesLists=moviesLists, user=current_user, bin="active")
 
 
 @app.route("/delete/<id>", methods={"GET", "POST"})
@@ -215,7 +216,7 @@ def new():
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="new", total_pages=total_pages, moviesLists=moviesLists, user=current_user, new="active")
+        return render_template("view.html", type="new", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -230,7 +231,7 @@ def new_paginated(page_no):
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page+movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="new", total_pages=total_pages, moviesLists=moviesLists, user=current_user, new="active")
+        return render_template("view.html", type="new", total_pages=total_pages, curr_page=page_no, moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -245,7 +246,7 @@ def popular():
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="popular", total_pages=total_pages, moviesLists=moviesLists, user=current_user, popular="active")
+        return render_template("view.html", type="popular", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, popular="active")
 
 
 @app.route("/popular/page/<page_no>", methods={"GET", "POST"})
@@ -260,7 +261,7 @@ def popular_paginated(page_no):
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="popular", moviesLists=moviesLists, total_pages=total_pages, user=current_user, popular="active")
+        return render_template("view.html", type="popular", moviesLists=moviesLists, curr_page=page_no, total_pages=total_pages, user=current_user, popular="active")
 
 
 
@@ -325,7 +326,7 @@ def language(lang):
         total_pages = len(langMovies) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, type="language", total_pages=total_pages, user=current_user, active=lang, language="active")
+        return render_template("view.html", moviesLists=moviesLists, curr_page = 1, type="language", total_pages=total_pages, user=current_user, active=lang, lang=lang, language="active")
 
 
 
@@ -336,7 +337,6 @@ def language_paginated(lang, page_no):
     moviesLists = []
     langMovies = []
     page_no = int(page_no) - 1
-    lang1=lang
     d = {"bengali":"active", "english":"active"}
     if request.method == "GET":
         results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
@@ -346,7 +346,7 @@ def language_paginated(lang, page_no):
         total_pages = len(langMovies) // movie_per_page + 1
         for i in range(page_no*movie_per_page, movie_per_page*page_no + movie_per_page, tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
-        return render_template("view.html", total_pages=total_pages, type="language", lang1=lang1, moviesLists=moviesLists, user=current_user, active=lang, language="active")
+        return render_template("view.html", total_pages=total_pages, curr_page=page_no, type="language", lang=lang, moviesLists=moviesLists, user=current_user, active=lang, language="active")
 
 
 
@@ -364,6 +364,23 @@ def series():
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(langMovies[i:i+tile_per_row]) 
         return render_template("view.html", moviesLists=moviesLists, type="series", total_pages=total_pages, user=current_user, active="series", series="active")
+
+
+@app.route("/anime", methods={"GET", "POST"})
+@login_required
+def anime():
+    tile_per_row = 4
+    moviesLists = []
+    animeMovies = []
+    if request.method == "GET":
+        results = Movie.query.filter_by(is_archived=False).all()
+        for i in results:
+            if "Animation".casefold() in (j.casefold() for j in i.genre.split(", ")) and "Japanese".casefold() == i.language.casefold():
+                animeMovies.append(i)
+        total_pages = len(animeMovies) // movie_per_page + 1
+        for i in range(0, movie_per_page, tile_per_row):
+            moviesLists.append(animeMovies[i:i+tile_per_row]) 
+        return render_template("view.html", moviesLists=moviesLists, type="series", total_pages=total_pages, user=current_user, active="anime", anime="active")
 
 
 
