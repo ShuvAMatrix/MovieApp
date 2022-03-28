@@ -613,6 +613,36 @@
                 </form>
             </div>
         </div>
+        <div class="dropdown mb-2 dropend">
+            <a
+              class="btn btn-sm btn-rounded btn-outline-success dropdown-toggle"
+              href="#"
+              role="button"
+              id="dropdownMenuLink"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Sort
+            </a>
+          
+            <ul class="dropdown-menu dropdown-menu-dark bg-dark" id="" aria-labelledby="dropdownMenuLink">
+              <li><button class="dropdown-item" onclick="
+                    var path = location.pathname
+                    query = '/updateSortMethod/name?next=' + path
+                    location.href = query
+                ">Name (A-Z)</button></li>
+              <li><button class="dropdown-item" onclick="
+                    var path = location.pathname
+                    query = '/updateSortMethod/lastUploaded?next=' + path
+                    location.href = query
+                ">Last Uploaded</button></li>
+              <li><button class="dropdown-item" onclick="
+                    var path = location.pathname
+                    query = '/updateSortMethod/popularity?next=' + path
+                    location.href = query
+                ">Popularity</button></li>
+            </ul>
+          </div>
         {% block body %}
             
         {% endblock body %}

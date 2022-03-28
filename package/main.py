@@ -1,4 +1,5 @@
 from datetime import datetime
+from tarfile import SUPPORTED_TYPES
 from urllib import response
 from flask import request
 import requests
@@ -136,25 +137,49 @@ def fetchAllDetails(id, imdb_id):
 
 
 def fetchSimilarMovies(movie):
-    related_movies = []
-    movies = Movie.query.filter_by(is_archived=False).all()
+    if movie.is_archived:
+        movies = Movie.query.filter_by(is_archived=True).all()
+    else:
+        movies = Movie.query.filter_by(is_archived=False).all()
+    
     genre = movie.genre.split(", ")
     movie_match = {}
+
     if "Animation" in genre:
         if "Japanese" in movie.language.split(", "):
             for i in movies:
                 if movie.id != i.id and "Animation" in i.genre.split(", ") and "Japanese" in i.language:
-                    movie_match[i] = similar(i.name, movie.name)
+                    temp = similar(i.name, movie.name)
+                    if temp > 0.6:
+                        movie_match[i] = temp
+            if len(list(movie_match.keys())) < 4:
+                for i in movies:
+                    if movie.id != i.id and "Animation" in i.genre.split(", ") and "Japanese" in i.language:
+                            movie_match[i] = similar(i.name, movie.name)
         else:
             for i in movies:
                 if movie.id != i.id and "Animation" in i.genre.split(", "):
-                    movie_match[i] = similar(i.name, movie.name)
+                    temp = similar(i.name, movie.name)
+                    if temp > 0.6:
+                        movie_match[i] = temp
+            if len(list(movie_match.keys())) < 4:
+                for i in movies:
+                    if movie.id != i.id and "Animation" in i.genre.split(", "):
+                            movie_match[i] = similar(i.name, movie.name)
     else:
         for i in movies:
             if movie.id != i.id and "Animation" not in i.genre.split(", "):
-                if set(genre) & set(i.genre.split(", ")):
-                    movie_match[i] = similar(i.name, movie.name)
+                temp = similar(i.name.split(":")[0], movie.name.split(":")[0])
+                if temp > 0.6:
+                    movie_match[i] = temp
+        if len(list(movie_match.keys())) < 4:
+            for i in movies:
+                if movie.id != i.id and "Animation" not in i.genre.split(", "):
+                        movie_match[i] = similar(i.name, movie.name)
+
     sorted_dict = dict(sorted(movie_match.items(), key=lambda item: item[1], reverse=True))
+    # print(sorted_dict)
+    # print([i.name for i in list(sorted_dict.keys())])
     return list(sorted_dict.keys())
 
 

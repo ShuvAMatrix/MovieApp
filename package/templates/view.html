@@ -543,6 +543,17 @@
                                 <li class="page-item" id="page_{{i+1}}"><a class="page-link text-white" href="/new/page/{{i+1}}">{{i+1}}</a></li>
                             {% endfor %}
                         {% endif %}
+                        {% if type=="anime" %}
+                            <li class="page-item {{new}}" id="firstpage" aria-current="page">
+                                <a class="page-link text-white" href="/anime">
+                                1
+                                <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            {% for i in range(1,total_pages) %}
+                                <li class="page-item" id="page_{{i+1}}"><a class="page-link text-white" href="/anime/page/{{i+1}}">{{i+1}}</a></li>
+                            {% endfor %}
+                        {% endif %}
                         
                     {% endif %}
                   
