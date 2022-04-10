@@ -473,6 +473,37 @@
                                 {% endfor %}
                             {% endif %}                   
                         {% endif %}
+                        {% if type=="anime" %}
+                            {% if curr_page > 2 %}
+                                {% for i in range(0,2) %}
+                                    {% if i == 0 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/anime">{{i+1}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/anime/page/{{i+1}}">{{i+1}}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                            {% endif %}
+                            {% for i in range(curr_page,curr_page+3) %}
+                                {% if i > 0 and i < (total_pages+1)%}
+                                    {% if i == 1 %}
+                                    <li class="page-item active" id="firstpage" ><a class="page-link text-white" href="/anime">{{i}}</a></li>
+                                    {% else %}
+                                    <li class="page-item" id="page_{{i}}" ><a class="page-link text-white" href="/anime/page/{{i}}">{{i}}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if curr_page < (total_pages - 3) %}
+                                <li class="page-item {{category}}" id="firstpage" aria-current="page">
+                                    ...
+                                </li>
+                                {% for i in range(total_pages-2  ,total_pages) %}
+                                    <li class="page-item" id="page_{{i+1}}" ><a class="page-link text-white" href="/anime/page/{{i+1}}">{{i+1}}</a></li>
+                                {% endfor %}
+                            {% endif %}                   
+                        {% endif %}
 
                     {% else %}
                     
@@ -544,7 +575,7 @@
                             {% endfor %}
                         {% endif %}
                         {% if type=="anime" %}
-                            <li class="page-item {{new}}" id="firstpage" aria-current="page">
+                            <li class="page-item {{anime}}" id="firstpage" aria-current="page">
                                 <a class="page-link text-white" href="/anime">
                                 1
                                 <span class="visually-hidden">(current)</span>

@@ -62,7 +62,7 @@ def view():
     popularMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()[:4]
     newMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()[:4]
     animeMovies = Movie.query.filter_by(is_archived=False).filter(Movie.genre.contains("Animation")).all()[:4]
-    return render_template("index.html", popularMovies=popularMovies, newMovies=newMovies, animeMovies=animeMovies, user=current_user)
+    return render_template("index.html", value_sort="hidden", popularMovies=popularMovies, newMovies=newMovies, animeMovies=animeMovies, user=current_user)
     # tile_per_row = 4
     # results = Movie.query.filter_by(is_archived=False).all()
     # moviesLists = []
@@ -274,7 +274,7 @@ def new():
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="new", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, new="active")
+        return render_template("view.html", type="new", value_sort="hidden", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -289,7 +289,7 @@ def new_paginated(page_no):
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page+movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="new", total_pages=total_pages, curr_page=page_no, moviesLists=moviesLists, user=current_user, new="active")
+        return render_template("view.html", type="new", value_sort="hidden", total_pages=total_pages, curr_page=page_no, moviesLists=moviesLists, user=current_user, new="active")
 
 
 
@@ -304,7 +304,7 @@ def popular():
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="popular", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, popular="active")
+        return render_template("view.html", type="popular", value_sort="hidden", total_pages=total_pages, curr_page=1, moviesLists=moviesLists, user=current_user, popular="active")
 
 
 @app.route("/popular/page/<page_no>", methods={"GET", "POST"})
@@ -319,7 +319,7 @@ def popular_paginated(page_no):
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
-        return render_template("view.html", type="popular", moviesLists=moviesLists, curr_page=page_no, total_pages=total_pages, user=current_user, popular="active")
+        return render_template("view.html", type="popular", value_sort="hidden", moviesLists=moviesLists, curr_page=page_no, total_pages=total_pages, user=current_user, popular="active")
 
 
 
@@ -366,7 +366,7 @@ def details(id):
         # t2.start()
         # tmdb_info, omdb_info = t1.join()
         # related_movies = t2.join()
-        return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
+        return render_template("details.html", user=current_user, value_sort="hidden", movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
 
 
 @app.route("/language/<lang>", methods={"GET", "POST"})
@@ -459,7 +459,7 @@ def anime():
         total_pages = len(animeMovies) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(animeMovies[i:i+tile_per_row]) 
-        return render_template("view.html", moviesLists=moviesLists, type="series", total_pages=total_pages, user=current_user, active="anime", anime="active")
+        return render_template("view.html", moviesLists=moviesLists, type="anime", total_pages=total_pages, user=current_user, active="anime", anime="active")
 
 
 
@@ -467,6 +467,7 @@ def anime():
 @login_required
 def anime_paged(page_no):
     tile_per_row = 4
+    page_no = int(page_no) - 1
     moviesLists = []
     animeMovies = []
     if request.method == "GET":
@@ -484,7 +485,7 @@ def anime_paged(page_no):
         total_pages = len(animeMovies) // movie_per_page + 1
         for j in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
             moviesLists.append(animeMovies[j:j+tile_per_row])
-        return render_template("view.html", moviesLists=moviesLists, type="series", total_pages=total_pages, user=current_user, active="anime", anime="active")
+        return render_template("view.html", moviesLists=moviesLists, type="anime", total_pages=total_pages, user=current_user, active="anime", anime="active")
 
 
 
@@ -506,7 +507,7 @@ def seriesdetails(id):
             tmdb_info = json.loads(saved_movie.tmdb_data)
             omdb_info = json.loads(saved_movie.omdb_data)
         related_movies = fetchSimilarMovies(movie)[:4]
-        return render_template("seriesdetails.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
+        return render_template("seriesdetails.html", value_sort="hidden", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
 
 
 
@@ -545,7 +546,7 @@ def moviedetails(id):
                 tmdb_info = json.loads(saved_movie.tmdb_data)
                 omdb_info = json.loads(saved_movie.omdb_data)
             related_movies = fetchSimilarMovies(movie)[:4]
-            return render_template("details.html", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
+            return render_template("details.html", value_sort="hidden", user=current_user, movie=movie, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, value="hidden")
         else:
             saved_movie = SavedMovies.query.filter_by(id=id).first()
             if not saved_movie:
@@ -568,7 +569,7 @@ def moviedetails(id):
                     moviegenre += i["name"]
                     moviegenre += ", "
             related_movies = fetchSavedSimilarMovies(moviegenre)[:4]
-            return render_template("newdetails.html", id=id, user=current_user, imdb_id=imdb_id, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, itp=imdb_title_prefix, iip=imdb_image_prefix, genre=moviegenre, value="hidden")
+            return render_template("newdetails.html", value_sort="hidden", id=id, user=current_user, imdb_id=imdb_id, tmdb_info=tmdb_info, omdb_info=omdb_info, related_movies=related_movies, itp=imdb_title_prefix, iip=imdb_image_prefix, genre=moviegenre, value="hidden")
 
 
 
@@ -609,7 +610,7 @@ def requestdashboard():
     if request.method == "GET":
         unFulfilled = MovieRequest.query.filter_by(isfulfilled=False).all()
         fulfilled = MovieRequest.query.filter_by(isfulfilled=True).all()
-        return render_template("requests.html", user=current_user, unFulfilled=unFulfilled, fulfilled=fulfilled, value="hidden", requestdashboard="active", admincorner="active")
+        return render_template("requests.html", value_sort="hidden", user=current_user, unFulfilled=unFulfilled, fulfilled=fulfilled, value="hidden", requestdashboard="active", admincorner="active")
 
 
 @app.route("/acceptrequest/<id>", methods={"GET", "POST"})
@@ -640,7 +641,7 @@ def denyrequest(id):
 def edit(id):
     if request.method == "GET":
         movie = Movie.query.filter_by(id=id).first()
-        return render_template("edit.html", user=current_user, value="hidden", movie=movie)
+        return render_template("edit.html", value_sort="hidden", user=current_user, value="hidden", movie=movie)
     if request.method == "POST":
         id = request.form["id"]
         previous_id = request.form["previous_id"]
