@@ -106,12 +106,13 @@ def all():
     tile_per_row = 4
     if sort_method == "lastUploaded":
         results = Movie.query.filter_by(is_archived=False).all()
+        results += Movie.query.filter_by(is_archived=True).all()
     elif sort_method == "name":
-        results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        results = Movie.query.order_by(Movie.name.asc()).all()
     elif sort_method == "popularity":
         # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
     total_pages = len(results) // movie_per_page + 1
     moviesLists = []
     for i in range(0, movie_per_page, tile_per_row):
@@ -126,12 +127,13 @@ def all_paginated(page_no):
     page_no = int(page_no) - 1
     if sort_method == "lastUploaded":
         results = Movie.query.filter_by(is_archived=False).all()
+        results += Movie.query.filter_by(is_archived=True).all()
     elif sort_method == "name":
-        results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        results = Movie.query.order_by(Movie.name.asc()).all()
     elif sort_method == "popularity":
         # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
     moviesLists = []
     total_pages = len(results) // movie_per_page + 1
     # print(total_pages)
@@ -145,13 +147,13 @@ def all_paginated(page_no):
 def category(cat):
     tile_per_row = 4
     if sort_method == "lastUploaded":
-        allMovies = Movie.query.filter_by(is_archived=False).all()
+        allMovies = Movie.query.all()
     elif sort_method == "name":
-        allMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        allMovies = Movie.query.order_by(Movie.name.asc()).all()
     elif sort_method == "popularity":
         # allMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        allMovies = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        allMovies = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
     temp = []
     movieLists = []
     if cat == "Science Fiction":
@@ -176,13 +178,13 @@ def categoryPage(cat, page_no):
     tile_per_row = 4
     page_no = int(page_no) - 1
     if sort_method == "lastUploaded":
-        allMovies = Movie.query.filter_by(is_archived=False).all()
+        allMovies = Movie.query.all()
     elif sort_method == "name":
-        allMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+        allMovies = Movie.query.order_by(Movie.name.asc()).all()
     elif sort_method == "popularity":
         # allMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        allMovies = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        allMovies = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
     temp = []
     movieLists = []
     if cat == "Science Fiction":
@@ -270,7 +272,7 @@ def new():
     tile_per_row = 4
     moviesLists = []
     if request.method == "GET":
-        results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
+        results = Movie.query.order_by(Movie.release_year.desc()).all()
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
@@ -285,7 +287,7 @@ def new_paginated(page_no):
     moviesLists = []
     page_no = int(page_no) - 1
     if request.method == "GET":
-        results = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()
+        results = Movie.query.order_by(Movie.release_year.desc()).all()
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page+movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
@@ -299,8 +301,8 @@ def popular():
     tile_per_row = 4
     moviesLists = []
     if request.method == "GET":
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
         total_pages = len(results) // movie_per_page + 1
         for i in range(0, movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
@@ -314,8 +316,8 @@ def popular_paginated(page_no):
     moviesLists = []
     page_no = int(page_no) - 1
     if request.method == "GET":
-        results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-        results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+        results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+        results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
         total_pages = len(results) // movie_per_page + 1
         for i in range(page_no*movie_per_page, page_no*movie_per_page + movie_per_page, tile_per_row):
             moviesLists.append(results[i:i+tile_per_row]) 
@@ -378,13 +380,13 @@ def language(lang):
     d = {"bengali":"active", "english":"active"}
     if request.method == "GET":
         if sort_method == "lastUploaded":
-            results = Movie.query.filter_by(is_archived=False).all()
+            results = Movie.query.all()
         elif sort_method == "name":
-            results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+            results = Movie.query.order_by(Movie.name.asc()).all()
         elif sort_method == "popularity":
             # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-            results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-            results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()            
+            results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+            results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()            
         for i in results:
             if lang.casefold() in i.language.casefold():
                 langMovies.append(i)
@@ -405,13 +407,13 @@ def language_paginated(lang, page_no):
     d = {"bengali":"active", "english":"active"}
     if request.method == "GET":
         if sort_method == "lastUploaded":
-            results = Movie.query.filter_by(is_archived=False).all()
+            results = Movie.query.all()
         elif sort_method == "name":
-            results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+            results = Movie.query.order_by(Movie.name.asc()).all()
         elif sort_method == "popularity":
             # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-            results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-            results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+            results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+            results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
         for i in results:
             if lang.casefold() in i.language.casefold():
                 langMovies.append(i)
@@ -429,7 +431,7 @@ def series():
     moviesLists = []
     langMovies = []
     if request.method == "GET":
-        results = Series.query.filter_by(is_archived=False).order_by(Series.name.asc()).all()
+        results = Series.query.order_by(Series.name.asc()).all()
         for i in results:
             langMovies.append(i)
         total_pages = len(langMovies) // movie_per_page + 1
@@ -446,13 +448,13 @@ def anime():
     animeMovies = []
     if request.method == "GET":
         if sort_method == "lastUploaded":
-            results = Movie.query.filter_by(is_archived=False).all()
+            results = Movie.query.all()
         elif sort_method == "name":
-            results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+            results = Movie.query.order_by(Movie.name.asc()).all()
         elif sort_method == "popularity":
             # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-            results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-            results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+            results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+            results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
         for i in results:
             if "Animation".casefold() in (j.casefold() for j in i.genre.split(", ")) and "Japanese".casefold() == i.language.casefold():
                 animeMovies.append(i)
@@ -472,13 +474,13 @@ def anime_paged(page_no):
     animeMovies = []
     if request.method == "GET":
         if sort_method == "lastUploaded":
-            results = Movie.query.filter_by(is_archived=False).all()
+            results = Movie.query.all()
         elif sort_method == "name":
-            results = Movie.query.filter_by(is_archived=False).order_by(Movie.name.asc()).all()
+            results = Movie.query.order_by(Movie.name.asc()).all()
         elif sort_method == "popularity":
             # results = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.asc()).all()
-            results1 = Movie.query.filter_by(is_archived=False).filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
-            results = results1 + Movie.query.filter_by(is_archived=False).filter_by(imdb_rating="N/A").all()
+            results1 = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()
+            results = results1 + Movie.query.filter_by(imdb_rating="N/A").all()
         for i in results:
             if "Animation".casefold() in (j.casefold() for j in i.genre.split(", ")) and "Japanese".casefold() == i.language.casefold():
                 animeMovies.append(i)

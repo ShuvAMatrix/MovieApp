@@ -4,6 +4,16 @@
         .page-item .page-link a{
             color: black;
         }
+        .movie-title{
+            color:white;
+        }
+        .movie-title:hover{
+            /* color:springgreen; */
+            /* background: -webkit-linear-gradient(#00F260, #0575E6); */
+            background: linear-gradient(to right, #30CFD0 0%, #7412ec 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 {% endblock extracss %}
 {% block body %}
@@ -271,7 +281,7 @@
                                 </div>
                             </a>  
                         </div>
-                        <div class="mx-1 text-white"><b>{{movie.name}}</b></div>
+                        <div class="mx-1 text-white"><a class="text-decoration-none movie-title" href="/details/{{movie.id}}"><b>{{movie.name}}</b></a></div>
                         <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{{movie.release_year}}</div>
                     </div>
                 {% endfor %}
