@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block extracss %}
+    <style>
+        body{
+            background: lightblue url("https://i.ibb.co/stLQxNM/10806040.jpg") no-repeat fixed center;
+        }
+        .rectangle{
+            /* width:40%;
+            height:30%;
+            background-color:#dbdbdb;
+            position:absolute;*/
+            /* top:50%;
+            left:50%;  */
+            /* transform:translate(-50%,-50%); */
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(1.9px);
+            -webkit-backdrop-filter: blur(1.9px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            }
+    </style>
+{% endblock extracss %}
+{% block body %}
+    <div class="text-center">
+        <div style="margin-top: 40vh;" class="container justify-content-center">
+            <div class="row mt-1 text-center">
+                <div class="rectangle col-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="text-center text-white justify-content-center">
+                        <h1>Sowwy <span><img src="../../../static/img/sad.png" style="max-width: 48px;"></span></h1>
+                        <h3> There has been some glitch!</h3>
+                        <p>Returning back in <span id="counter"></span> seconds...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block extrajs %}
+    <script>
+        window.onload = CreateTimer("counter");
+        var Timer; 
+        var TotalSeconds = 5;
+        function Tick() { 
+            if (TotalSeconds <= 0) { 
+                location.href = "/"
+                return; 
+            } 
+            TotalSeconds -= 1; 
+            UpdateTimer()
+            window.setTimeout("Tick()", 1000); 
+        }
+
+        function UpdateTimer() { 
+            Timer.innerHTML = TotalSeconds; 
+        }
+        function CreateTimer(TimerID) {
+            Timer = document.getElementById(TimerID); 
+            TotalSeconds = 5; 
+            UpdateTimer() 
+            window.setTimeout("Tick()", 1000); 
+        }
+
+    </script>
+{% endblock extrajs %}

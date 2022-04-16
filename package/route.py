@@ -1,13 +1,14 @@
 from flask import Flask, request, redirect, flash
 from flask import render_template
 import json
-from package.main import findIMDBid, getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies, apisearch, getOMDBRes, getTMDBRes, fetchSavedSimilarMovies
+from package.main import apisearch2, findIMDBid, getAddMovieDetails, gsearch, getGenre, fetchAllDetails, fetchSimilarMovies, apisearch, getOMDBRes, getTMDBRes, fetchSavedSimilarMovies
 from flask_login import login_user, current_user, logout_user, login_required
 from package import app, db, imdb_image_prefix, imdb_title_prefix
 from package.models import Movie, SavedMovies, SavedSeries, User, SavedQueries, MovieRequest, Series
 from package.cutomClasses import CustomThread
 import threading
 import time
+import random
 
 sort_method = "lastUploaded"
 
@@ -59,16 +60,14 @@ def login():
 @login_required
 def view():
     movies = Movie.query.filter_by(is_archived=False).all()
-    popularMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.imdb_rating.desc()).all()[:4]
-    newMovies = Movie.query.filter_by(is_archived=False).order_by(Movie.release_year.desc()).all()[:4]
-    animeMovies = Movie.query.filter_by(is_archived=False).filter(Movie.genre.contains("Animation")).all()[:4]
+    pop = Movie.query.filter(Movie.imdb_rating != "N/A").order_by(Movie.imdb_rating.desc()).all()[:40]
+    popularMovies = random.sample(pop, 4)
+    nm = Movie.query.filter_by(is_archived=False).all()[-40:]
+    newMovies = random.sample(nm, 4)
+    am = animeMovies = Movie.query.filter_by(is_archived=False).filter(Movie.genre.contains("Animation")).filter(Movie.language.contains("Japanese")).all()
+    animeMovies = random.sample(am, 4)
     return render_template("index.html", value_sort="hidden", popularMovies=popularMovies, newMovies=newMovies, animeMovies=animeMovies, user=current_user)
-    # tile_per_row = 4
-    # results = Movie.query.filter_by(is_archived=False).all()
-    # moviesLists = []
-    # for i in range(0, len(results), tile_per_row):
-    #     moviesLists.append(results[i:i+tile_per_row]) 
-    # return render_template("view.html", moviesLists=moviesLists, user=current_user)
+
 
 
 @app.route("/googlesearch/<query>", methods={"GET", "POST"})
@@ -526,6 +525,20 @@ def apisearchq(query):
         db.session.add(saveQuery)
         db.session.commit()
         return result
+
+
+@app.route("/search/viewall/<query>", methods={"GET", "POST"})
+@login_required
+def apisearchAll(query):
+    if request.method == "GET":
+        result = apisearch2(query)
+        # return result
+        movies = result["results"]
+        tile_per_row = 6
+        moviesLists = []
+        for i in range(0, len(movies), tile_per_row):
+            moviesLists.append(movies[i:i+tile_per_row]) 
+        return render_template("searchres.html", value_sort="hidden", moviesLists=moviesLists, user=current_user, query=query)
     
 
 
@@ -728,3 +741,30 @@ def refresh(imdb_id):
         d["runtime"] = runtime
         d["language"] = language
         return d
+
+
+
+@app.errorhandler(404)
+def notFound(e):
+    message = "May be you have entered a wrong URL. Please check once."
+    error = "404"
+    return render_template("404.html", message=message, error = error, user=current_user, value_sort="hidden", value="hidden")
+
+@app.errorhandler(500)
+def serverError(e):
+    print("hi",e)
+    message = "Something is wrong. Please check if you have entered valid URL. Meanwhile we are checking from our end."
+    error = "500"
+    return render_template("404.html", message=message, error = error, user=current_user, value_sort="hidden", value="hidden")
+
+@app.errorhandler(410)
+def gone(e):
+    message = "Moment ago it was there, but now isn't. I'm confused as hell. I'm still trying to figure it out."
+    error = "410"
+    return render_template("404.html", message=message, error = error, user=current_user, value_sort="hidden", value="hidden")
+
+@app.errorhandler(403)
+def forbidden(e):
+    message = "Turn back! I don't expect you to be here!"
+    error = "403"
+    return render_template("404.html", message=message, error = error, user=current_user, value_sort="hidden", value="hidden")

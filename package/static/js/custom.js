@@ -137,7 +137,7 @@ $(document).ready(function() {
             $.get(url, function(response) {
                 var result = response["results"]
                 var length = response["length"]
-                var preDiv1 = '<span class="input-group-text border-0" style="background-color: #212529;"><div class="col col-6 h6 text-white text-left"><a style="font-size: 14px;" class="text-decoration-none searchLink" href="/new"><i>Detailed Search</i></a></div> <div class="col col-6 h6 text-white text-right"><a style="font-size: 14px;" class="text-decoration-none searchLink" href="/new"><i>View All</i></a></div></span>'
+                var preDiv1 = '<span class="input-group-text border-0" style="background-color: #212529;"><div class="col col-6 h6 text-white text-left"><a style="font-size: 14px;" class="text-decoration-none searchLink" href="href="javascript:viewall()""><i>Detailed Search</i></a></div> <div class="col col-6 h6 text-white text-right"><a style="font-size: 14px;" class="text-decoration-none searchLink" href="javascript:viewall()""><i>View All</i></a></div></span>'
                 var preDiv2 = '<span class="input-group-text border-0" style="background-color: #212529;"><div class="col col-12 h6 text-white text-left" style="font-size: 14px;"><i>Not found? Perform a </i><a class="text-decoration-none searchLink" href="/new"><b><i> Detailed Search</i></b></a></div></span>'
                 if(length > 5){
                     $('#searchResults').prepend(preDiv1)
@@ -185,3 +185,22 @@ $(document).ready(function() {
             document.getElementById("imdbURL").value = "Error! Please fill URL manually"
         }
     }
+    function viewall(){
+        value = document.getElementById("littleSearch").value
+        url = "/search/viewall/" + value
+        location.href = url
+    }
+
+    // $(document).on("keydown", "form", function(event) { 
+    //     return event.key != "Enter";
+    // });
+
+    $('#aboutUsModal').on('hidden.bs.modal', function () {
+        $( "#navbar" ).addClass("fixed-top")
+        $('#searchaddon').addClass('mt-5')
+      })
+
+      $('#modalConfirmUpdate').on('hidden.bs.modal', function () {
+        $( "#navbar" ).addClass("fixed-top")
+        $('#searchaddon').addClass('mt-5')
+      })

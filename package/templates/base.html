@@ -34,7 +34,7 @@
 
 <body style="background-color: rgb(29, 29, 29);">
     <!--Navbar-->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 fixed-top">
         <div class="container-fluid">
             <!-- Navbar brand -->
             <a class="navbar-brand mx-5" href="/">Movies</a>
@@ -228,7 +228,12 @@
                     </li>
                     
                     <li class="nav-item {{v}} mx-2">
-                        <a class="nav-link" type="button" data-mdb-target="#aboutUsModal" data-mdb-toggle="modal">About Us
+                        <a class="nav-link" type="button" data-mdb-target="#aboutUsModal" onclick="
+                            var nav = document.getElementById('navbar')
+                            nav.classList.remove('fixed-top')
+                            var sch = document.getElementById('searchaddon')
+                            sch.classList.remove('mt-5')
+                        " data-mdb-toggle="modal">About Us
                         </a>
                     </li>
                     <div class="modal fade" id="aboutUsModal" tabindex="-1" role="dialog"
@@ -512,7 +517,12 @@
                 {% if user.admin %}
                 <div class="md-form mx-2">
                     <a type="button" class="btn btn-sm btn-outline-success btn-rounded waves-effect"
-                        data-target="#modalConfirmUpdate" data-toggle="modal">Add Movie</a>
+                        data-target="#modalConfirmUpdate" onclick="
+                            var nav = document.getElementById('navbar')
+                            nav.classList.remove('fixed-top')
+                            var sch = document.getElementById('searchaddon')
+                            sch.classList.remove('mt-5')
+                        " data-toggle="modal">Add Movie</a>
                 </div>
                 {% endif %}
                 <!-- Button trigger modal-->
@@ -593,10 +603,10 @@
             {% endif %}
         {% endwith %}
 
-        <div {{value}} class="row mt-0 justify-content-center">
+        <div {{value}} id="searchaddon" class="row mt-5 justify-content-center">
             <div class="col-12 col-md-6 col-lg-6 col-xl-6" style="max-width: 500px; text-align: center;">
-                <form class="d-flex ml-2 mb-5 input-group w-auto">
-                    <div class="container">
+                <div class="d-flex ml-2 mb-4 input-group w-auto">
+                    <div class="container" style="margin-top: 12%;">
                         <input
                             type="search"
                             id="littleSearch"
@@ -611,7 +621,7 @@
                             </div> 
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         <div {{value_sort}} class="dropdown mb-2 dropend">

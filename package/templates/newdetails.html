@@ -2,7 +2,7 @@
 {% block body %}
 <div class="container-fluid text-center justify-content-center">
     <div class="row g-5">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
             <div class="mt-3">
                 <img class="img-fluid z-depth-2 img-thumbnail rounded" style="max-height: 70vh;"
                     src="{% if tmdb_info['poster_path'] != None %}{{iip|string + tmdb_info['poster_path']|string}}{% else %}/static/img/notAvailable.jpg{% endif %}" alt="{{tmdb_info['title']}}">
@@ -119,13 +119,13 @@
             </div>
         </div>
         {% if related_movies|length > 0 %}
-            <div class="d-none d-lg-block d-xl-block col-2">
-                <div class="h5 my-4 text-white ">Related Movies</div>
-                <div class="row row-cols-1 gy-5">
+            <div class="d-block d-lg-block d-xl-block col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                <div class="h5 my-4 text-white text-center">Related Movies</div>
+                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-2 row-cols-xl-2 gy-1">
                     {% for rmovie in related_movies %}
                         <div class=" justify-content-center">
                             <a href="/details/{{rmovie.id}}">
-                                <img class="img-fluid img-thumbnail thumb_movie" style="max-width: 130px;" src="{{rmovie.posterLink}}">
+                                <img class="img-fluid img-thumbnail thumb_movie" style="max-width: 125px;" src="{{rmovie.posterLink}}">
                             </a>
                             <div class="text-white mx-2 my-2" style="font-size:13px;">{{rmovie.name}}</div>
                         </div>
@@ -137,3 +137,11 @@
     </div>
 </div>
 {% endblock body %}
+
+{% block extrajs %}
+    <script>
+        window.onload = function(){
+            $( '#navbar' ).removeClass('fixed-top');
+        }
+    </script>
+{% endblock extrajs %}

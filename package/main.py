@@ -194,6 +194,26 @@ def apisearch(query):
     return d
 
 
+def apisearch2(query):
+    url = 'https://api.themoviedb.org/3/search/movie?api_key='+TMDB_API_KEY+'&language=en-US&query='+quote(query)+'&page=1&include_adult=true'
+    response = requests.get(url).json()
+    total_pages = response["total_pages"]
+    y = []
+    if total_pages > 1:
+        for i in range(total_pages):
+            url = 'https://api.themoviedb.org/3/search/movie?api_key='+TMDB_API_KEY+'&language=en-US&query='+quote(query)+'&page=' + str(i+1) +'&include_adult=true'
+            response = requests.get(url).json()
+            temp = response["results"]
+            for movie in temp:
+                y.append(movie)
+    # y.sort(key=lambda x: float(x["vote_average"]))
+    d = {}
+    # d["results"] = y[::-1]
+    d["results"] = y
+    d["length"] = response["total_results"]
+    return d
+
+
 def fetchSavedSimilarMovies(moviegenre):
     related_movies = []
     movies = Movie.query.filter_by(is_archived=False).all()

@@ -102,3 +102,11 @@
         </tbody>
       </table>
 {% endblock body %}
+
+{% block extrajs %}
+    <script>
+        window.onload = function(){
+            $( '#navbar' ).removeClass('fixed-top');
+        }
+    </script>
+{% endblock extrajs %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block extracss %}
+    <style>
+        .row-link{
+            color:white;
+        }
+        .row-link:hover{
+            color:springgreen;
+        }
+    </style>
+{% endblock extracss %}
+{% block body %}
+<div class="container text-white text-center mt-1">
+    <div class="row text-white my-1">
+        <div class="row mt-1">
+            <div class="h4 text-left"><p class="note note-success bg-dark">Search Results for: <span class="text-success"><b>' {{query}} '</b></span></p></div>
+        </div>
+        <div class="row mb-2 g-2">
+            {% for moviesList in moviesLists %}
+                <div class="row mt-4 mb-3">
+                    {% for movie in moviesList %}
+                        <div class="col-6 col-md-4 col-lg-2 col-xl-2 mb-4">
+                            <a href="/moviedetails/{{movie.id}}">
+                                <img class="img-fluid img-thumbnail thumb_movie" src="{% if movie['poster_path'] %}
+                                    https://image.tmdb.org/t/p/w500/{{movie['poster_path']}}
+                                {% else %}
+                                https://i.ibb.co/S5DwWt9/not-available.jpg
+                                {% endif %}" style="max-height: 30vh;">
+                            </a>
+                            <div class="mx-1 text-white"><a class="text-decoration-none row-link" href="/moviedetails/{{movie.id}}"><b>{% if movie["title"] | length > 28 %}
+                                {{movie["title"][:26]}}...
+                            {% else %}
+                                {{movie["title"]}}
+                            {% endif %}</b></a></div>
+                            <div class="mx-1 text-white" style="font-size: 14px; font-weight: 50;">{% if movie["release_date"] %}
+                                {{movie["release_date"].split("-")[0]}}
+                            {% else %}
+                                Not Available
+                            {% endif %}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    
+{% endblock body %}
