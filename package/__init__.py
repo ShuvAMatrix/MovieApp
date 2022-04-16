@@ -1,9 +1,11 @@
+import os
+
+from dotenv import find_dotenv, load_dotenv
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
-import os
-from dotenv import find_dotenv, load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+
 load_dotenv(find_dotenv())
 
 app = Flask(__name__)
@@ -34,7 +36,7 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from package import route
-from package.commands import createAdmin, dropnCreateDb, createUser, initialize
+from package.commands import createAdmin, createUser, dropnCreateDb, initialize
 
 app.cli.add_command(createAdmin)
 app.cli.add_command(dropnCreateDb)

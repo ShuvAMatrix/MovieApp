@@ -41,7 +41,7 @@
     <script>
         window.onload = CreateTimer("counter");
         var Timer; 
-        var TotalSeconds = 5;
+        var TotalSeconds = 10;
         function Tick() { 
             if (TotalSeconds <= 0) { 
                 location.href = "/"
@@ -57,7 +57,7 @@
         }
         function CreateTimer(TimerID) {
             Timer = document.getElementById(TimerID); 
-            TotalSeconds = 5; 
+            TotalSeconds = 10; 
             UpdateTimer() 
             window.setTimeout("Tick()", 1000); 
         }

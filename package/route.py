@@ -768,3 +768,9 @@ def forbidden(e):
     message = "Turn back! I don't expect you to be here!"
     error = "403"
     return render_template("404.html", message=message, error = error, user=current_user, value_sort="hidden", value="hidden")
+
+
+@app.route("/terms&conditions", methods={"GET", "POST"})
+@login_required
+def tnc():
+    return render_template('tnc.html', user=current_user, value_sort="hidden", value="hidden")

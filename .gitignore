@@ -1,10 +1,12 @@
 .env
 test.html
 reset.py
-tasks.db
 others
 gdrive movies.txt
 OMDB.txt
 TMDB.txt
-herokuDataBackup
+__pycache__
+package/tasks.db
 package/__pycache__
+migrations
+herokuDataBackup
